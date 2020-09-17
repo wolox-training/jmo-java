@@ -17,9 +17,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
-    @ExceptionHandler({BookIdMismatchException.class,
-        ConstraintViolationException.class,
-        DataIntegrityViolationException.class})
+    @ExceptionHandler({ConstraintViolationException.class})
     public ResponseEntity<Object> handleBadRequest(
         Exception ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getLocalizedMessage(),
