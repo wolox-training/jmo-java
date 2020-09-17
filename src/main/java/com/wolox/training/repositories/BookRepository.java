@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface BookRepository extends CrudRepository<Book, Long> {
 
-    @Query("select b.author from Book b where b.author = :author")
-    Book findBookByAuthor(@Param("author") String author);
+    Book findByAuthor(@Param("author") String author);
 
 }
