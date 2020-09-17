@@ -1,19 +1,12 @@
 package com.wolox.training.model;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import static java.util.Objects.requireNonNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 
-@Getter
-@ToString
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public final class Book {
 
     private @Id
@@ -37,6 +30,8 @@ public final class Book {
     private @Column(nullable = false)
     String isbn;
 
+    Book(){}
+
     private Book(Builder builder) {
         this.idBook = builder.idBook;
         this.genre = builder.genre;
@@ -54,7 +49,62 @@ public final class Book {
         return new Builder();
     }
 
-    @NoArgsConstructor
+    public Long getIdBook() {
+        return idBook;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getSubtitle() {
+        return subtitle;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public Integer getPages() {
+        return pages;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+            "idBook=" + idBook +
+            ", genre='" + genre + '\'' +
+            ", author='" + author + '\'' +
+            ", image='" + image + '\'' +
+            ", title='" + title + '\'' +
+            ", subtitle='" + subtitle + '\'' +
+            ", publisher='" + publisher + '\'' +
+            ", year='" + year + '\'' +
+            ", pages=" + pages +
+            ", isbn='" + isbn + '\'' +
+            '}';
+    }
+
     public static class Builder {
 
         private Long idBook;
@@ -67,6 +117,8 @@ public final class Book {
         private String year;
         private Integer pages;
         private String isbn;
+
+        Builder() {}
 
         public Builder withIdBook(Long idBook) {
             this.idBook = idBook;
@@ -119,14 +171,14 @@ public final class Book {
         }
 
         public Book build() {
-            checkArgument(author == null, "Author is required");
-            checkArgument(image == null, "Image is required");
-            checkArgument(title == null, "Title is required");
-            checkArgument(subtitle == null, "Subtitle is required");
-            checkArgument(publisher == null, "Publisher is required");
-            checkArgument(year == null, "Year is required");
-            checkArgument(pages == null, "Pages is required");
-            checkArgument(isbn == null, "Isbn is required");
+            requireNonNull(author, "Author is required");
+            requireNonNull(image, "Image is required");
+            requireNonNull(title, "Title is required");
+            requireNonNull(subtitle, "Subtitle is required");
+            requireNonNull(publisher, "Publisher is required");
+            requireNonNull(year, "Year is required");
+            requireNonNull(pages, "Pages is required");
+            requireNonNull(isbn, "Isbn is required");
             return new Book(this);
         }
     }
