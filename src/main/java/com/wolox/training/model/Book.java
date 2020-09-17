@@ -2,6 +2,7 @@ package com.wolox.training.model;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import lombok.AccessLevel;
@@ -15,16 +16,26 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public final class Book {
 
-    private @Id Long idBook;
-    private String genre;
-    private String author;
-    private String image;
-    private String title;
-    private String subtitle;
-    private String publisher;
-    private String year;
-    private Integer pages;
-    private String isbn;
+    private @Id
+    Long idBook;
+    private @Column
+    String genre;
+    private @Column(nullable = false)
+    String author;
+    private @Column(nullable = false)
+    String image;
+    private @Column(nullable = false)
+    String title;
+    private @Column(nullable = false)
+    String subtitle;
+    private @Column(nullable = false)
+    String publisher;
+    private @Column(nullable = false)
+    String year;
+    private @Column(nullable = false)
+    Integer pages;
+    private @Column(nullable = false)
+    String isbn;
 
     private Book(Builder builder) {
         this.idBook = builder.idBook;
