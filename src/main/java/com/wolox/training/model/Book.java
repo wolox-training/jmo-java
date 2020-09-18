@@ -1,6 +1,6 @@
 package com.wolox.training.model;
 
-import com.sun.istack.NotNull;
+import javax.validation.constraints.NotNull
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
