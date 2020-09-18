@@ -1,19 +1,14 @@
 package com.wolox.training.model;
 
-import static java.util.Objects.requireNonNull;
-
-import java.util.List;
-import java.util.Objects;
 import com.sun.istack.NotNull;
-import com.sun.istack.Nullable;
-import javax.persistence.Column;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import org.springframework.lang.Nullable;
 
 @Entity
 public final class Book {

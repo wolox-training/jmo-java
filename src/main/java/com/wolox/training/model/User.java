@@ -1,12 +1,14 @@
 package com.wolox.training.model;
 
+import com.sun.istack.NotNull;
 import com.wolox.training.exceptions.BookAlreadyOwnedException;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
@@ -14,12 +16,13 @@ import javax.persistence.OneToMany;
 public final class User {
 
     private @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Long idUser;
-    private @Column(nullable = false)
+    private @NotNull
     String username;
-    private @Column(nullable = false)
+    private @NotNull
     String name;
-    private @Column(nullable = false)
+    private @NotNull
     LocalDate birthdate;
     private @OneToMany(mappedBy = "user")
     List<Book> books;
