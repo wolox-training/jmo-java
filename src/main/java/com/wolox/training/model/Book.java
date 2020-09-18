@@ -4,8 +4,12 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.List;
 import java.util.Objects;
+import com.sun.istack.NotNull;
+import com.sun.istack.Nullable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
@@ -15,24 +19,25 @@ import javax.persistence.ManyToOne;
 public final class Book {
 
     private @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Long idBook;
-    private @Column
+    private @Nullable
     String genre;
-    private @Column(nullable = false)
+    private @NotNull
     String author;
-    private @Column(nullable = false)
+    private @NotNull
     String image;
-    private @Column(nullable = false)
+    private @NotNull
     String title;
-    private @Column(nullable = false)
+    private @NotNull
     String subtitle;
-    private @Column(nullable = false)
+    private @NotNull
     String publisher;
-    private @Column(nullable = false)
+    private @NotNull
     String year;
-    private @Column(nullable = false)
+    private @NotNull
     Integer pages;
-    private @Column(nullable = false)
+    private @NotNull
     String isbn;
     private @ManyToOne
     @JoinColumn(name = "user_id")
@@ -54,10 +59,6 @@ public final class Book {
         this.pages = pages;
         this.isbn = isbn;
         this.user = user;
-    }
-
-    public void setIdBook(Long idBook) {
-        this.idBook = idBook;
     }
 
     public void setGenre(String genre) {
