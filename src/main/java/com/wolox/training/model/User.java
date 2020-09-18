@@ -15,17 +15,17 @@ import javax.persistence.OneToMany;
 @Entity(name = "Usser")
 public final class User {
 
-    private @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    Long idUser;
-    private @NotNull
-    String username;
-    private @NotNull
-    String name;
-    private @NotNull
-    LocalDate birthdate;
-    private @OneToMany(mappedBy = "user")
-    List<Book> books;
+    private gitLong idUser;
+    @NotNull
+    private String username;
+    @NotNull
+    private String name;
+    @NotNull
+    private LocalDate birthdate;
+    @OneToMany(mappedBy = "user")
+    private List<Book> books;
 
     User() {
     }
