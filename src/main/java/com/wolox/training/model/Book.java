@@ -1,10 +1,6 @@
 package com.wolox.training.model;
 
-import static java.util.Objects.requireNonNull;
-
 import com.sun.istack.NotNull;
-import com.sun.istack.Nullable;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,7 +12,6 @@ public final class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long idBook;
-    @Nullable
     private String genre;
     @NotNull
     private String author;
