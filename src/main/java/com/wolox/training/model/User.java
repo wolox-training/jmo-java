@@ -17,7 +17,7 @@ public final class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private gitLong idUser;
+    private Long idUser;
     @NotNull
     private String username;
     @NotNull
