@@ -159,4 +159,33 @@ public final class Book {
             ", isbn='" + isbn + '\'' +
             '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Book book = (Book) o;
+        return Objects.equals(idBook, book.idBook) &&
+            genre.equals(book.genre) &&
+            author.equals(book.author) &&
+            image.equals(book.image) &&
+            title.equals(book.title) &&
+            subtitle.equals(book.subtitle) &&
+            publisher.equals(book.publisher) &&
+            year.equals(book.year) &&
+            pages.equals(book.pages) &&
+            isbn.equals(book.isbn) &&
+            user.equals(book.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects
+            .hash(idBook, genre, author, image, title, subtitle, publisher, year, pages, isbn,
+                user);
+    }
 }

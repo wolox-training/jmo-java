@@ -27,16 +27,33 @@ public final class User {
     User() {
     }
 
-    private User(Builder builder) {
-        this.idUser = builder.idUser;
-        this.username = builder.username;
-        this.name = builder.name;
-        this.birthdate = builder.birthdate;
-        this.books = builder.books;
+    public User(Long idUser, String username, String name, LocalDate birthdate,
+        List<Book> books) {
+        this.idUser = idUser;
+        this.username = username;
+        this.name = name;
+        this.birthdate = birthdate;
+        this.books = books;
     }
 
-    public static Builder from() {
-        return new Builder();
+    public void setIdUser(Long idUser) {
+        this.idUser = idUser;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setBirthdate(LocalDate birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
     }
 
     public Long getIdUser() {
@@ -89,46 +106,6 @@ public final class User {
     @Override
     public int hashCode() {
         return Objects.hash(idUser, username, name, birthdate, books);
-    }
-
-    public static class Builder {
-
-        private Long idUser;
-        private String username;
-        private String name;
-        private LocalDate birthdate;
-        private List<Book> books;
-
-        Builder() {
-        }
-
-        public Builder withIdUser(Long idUser) {
-            this.idUser = idUser;
-            return this;
-        }
-
-        public Builder withUsername(String username) {
-            this.username = username;
-            return this;
-        }
-
-        public Builder withName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder withBirthdate(LocalDate birthdate) {
-            this.birthdate = birthdate;
-            return this;
-        }
-
-        public User build() {
-            Objects.requireNonNull(username, "Username is required");
-            Objects.requireNonNull(name, "Name is required");
-            Objects.requireNonNull(birthdate, "Birthdate is required");
-            Objects.requireNonNull(books, "Books is required");
-            return new User(this);
-        }
     }
 
     public void addBook(Book book) {
