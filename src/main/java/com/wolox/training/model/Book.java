@@ -2,35 +2,41 @@ package com.wolox.training.model;
 
 import static java.util.Objects.requireNonNull;
 
+import com.sun.istack.NotNull;
+import com.sun.istack.Nullable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public final class Book {
 
     private @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Long idBook;
-    private @Column
+    private @Nullable
     String genre;
-    private @Column(nullable = false)
+    private @NotNull
     String author;
-    private @Column(nullable = false)
+    private @NotNull
     String image;
-    private @Column(nullable = false)
+    private @NotNull
     String title;
-    private @Column(nullable = false)
+    private @NotNull
     String subtitle;
-    private @Column(nullable = false)
+    private @NotNull
     String publisher;
-    private @Column(nullable = false)
+    private @NotNull
     String year;
-    private @Column(nullable = false)
+    private @NotNull
     Integer pages;
-    private @Column(nullable = false)
+    private @NotNull
     String isbn;
 
-    Book(){}
+    Book() {
+    }
 
     public Book(Long idBook, String genre, String author, String image, String title,
         String subtitle, String publisher, String year, Integer pages, String isbn) {
@@ -44,10 +50,6 @@ public final class Book {
         this.year = year;
         this.pages = pages;
         this.isbn = isbn;
-    }
-
-    public void setIdBook(Long idBook) {
-        this.idBook = idBook;
     }
 
     public void setGenre(String genre) {
