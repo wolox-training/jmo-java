@@ -1,6 +1,5 @@
 package com.wolox.training.model;
 
-import com.sun.istack.NotNull;
 import com.wolox.training.exceptions.BookAlreadyOwnedException;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -11,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 @Entity(name = "Usser")
 public final class User {
