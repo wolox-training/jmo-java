@@ -39,10 +39,6 @@ public final class User {
         this.books = books;
     }
 
-    public void setIdUser(Long idUser) {
-        this.idUser = idUser;
-    }
-
     public void setUsername(String username) {
         this.username = username;
     }
