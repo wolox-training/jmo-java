@@ -39,7 +39,7 @@ public class BookController {
         return bookRepository.findAll();
     }
 
-    @PutMapping(value = "/{idBook}")
+    @PutMapping
     public void updateBook(@RequestBody Book book) {
         if(bookRepository.findById(book.getIdBook()).isPresent()) {
             throw new BookNotFoundException("Book not found");
