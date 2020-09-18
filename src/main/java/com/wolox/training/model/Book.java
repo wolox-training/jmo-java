@@ -2,9 +2,14 @@ package com.wolox.training.model;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.List;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 @Entity
 public final class Book {
@@ -29,6 +34,9 @@ public final class Book {
     Integer pages;
     private @Column(nullable = false)
     String isbn;
+    private @ManyToOne
+    @JoinColumn(name = "user_id")
+    User user;
 
     Book() {
     }
@@ -44,6 +52,7 @@ public final class Book {
         this.year = builder.year;
         this.pages = builder.pages;
         this.isbn = builder.isbn;
+        this.user = builder.user;
     }
 
     public static Builder from() {
@@ -90,6 +99,10 @@ public final class Book {
         return isbn;
     }
 
+    public User getUser() {
+        return user;
+    }
+
     @Override
     public String toString() {
         return "Book{" +
@@ -106,6 +119,35 @@ public final class Book {
             '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Book book = (Book) o;
+        return Objects.equals(idBook, book.idBook) &&
+            genre.equals(book.genre) &&
+            author.equals(book.author) &&
+            image.equals(book.image) &&
+            title.equals(book.title) &&
+            subtitle.equals(book.subtitle) &&
+            publisher.equals(book.publisher) &&
+            year.equals(book.year) &&
+            pages.equals(book.pages) &&
+            isbn.equals(book.isbn) &&
+            Objects.equals(user, book.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects
+            .hash(idBook, genre, author, image, title, subtitle, publisher, year, pages, isbn,
+                user);
+    }
+
     public static class Builder {
 
         private Long idBook;
@@ -118,6 +160,7 @@ public final class Book {
         private String year;
         private Integer pages;
         private String isbn;
+        private User user;
 
         Builder() {
         }
@@ -172,6 +215,11 @@ public final class Book {
             return this;
         }
 
+        public Builder withUser(User user) {
+            this.user = user;
+            return this;
+        }
+
         public Book build() {
             requireNonNull(author, "Author is required");
             requireNonNull(image, "Image is required");
@@ -181,6 +229,7 @@ public final class Book {
             requireNonNull(year, "Year is required");
             requireNonNull(pages, "Pages is required");
             requireNonNull(isbn, "Isbn is required");
+            requireNonNull(user, "User is required");
             return new Book(this);
         }
     }
