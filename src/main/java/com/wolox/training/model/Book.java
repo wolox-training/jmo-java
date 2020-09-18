@@ -13,27 +13,27 @@ import javax.persistence.Id;
 @Entity
 public final class Book {
 
-    private @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    Long idBook;
-    private @Nullable
-    String genre;
-    private @NotNull
-    String author;
-    private @NotNull
-    String image;
-    private @NotNull
-    String title;
-    private @NotNull
-    String subtitle;
-    private @NotNull
-    String publisher;
-    private @NotNull
-    String year;
-    private @NotNull
-    Integer pages;
-    private @NotNull
-    String isbn;
+    private Long idBook;
+    @Nullable
+    private String genre;
+    @NotNull
+    private String author;
+    @NotNull
+    private String image;
+    @NotNull
+    private String title;
+    @NotNull
+    private String subtitle;
+    @NotNull
+    private String publisher;
+    @NotNull
+    private String year;
+    @NotNull
+    private Integer pages;
+    @NotNull
+    private String isbn;
 
     Book() {
     }
