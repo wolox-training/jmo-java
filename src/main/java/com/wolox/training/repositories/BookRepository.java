@@ -9,6 +9,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface BookRepository extends CrudRepository<Book, Long> {
 
-    Book findByAuthor(@Param("author") String author);
+    Optional<Book> findByAuthor(@Param("author") String author);
 
 }
