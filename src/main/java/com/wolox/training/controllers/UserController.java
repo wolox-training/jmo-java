@@ -7,6 +7,9 @@ import com.wolox.training.model.Book;
 import com.wolox.training.model.User;
 import com.wolox.training.repositories.BookRepository;
 import com.wolox.training.repositories.UserRepository;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -34,6 +37,11 @@ public class UserController {
     private BookRepository bookRepository;
 
     @PostMapping
+    @ApiOperation(value = "Save a User", response = User.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Successfully saved user."),
+        @ApiResponse(code = 400, message = "User already exist.")
+    })
     public User createUser(@RequestBody User user) {
         try {
             return userRepository.save(user);

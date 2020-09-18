@@ -2,6 +2,7 @@ package com.wolox.training.model;
 
 import com.sun.istack.NotNull;
 import com.wolox.training.exceptions.BookAlreadyOwnedException;
+import io.swagger.annotations.ApiModel;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -13,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 @Entity(name = "Usser")
+@ApiModel(description = "user from training java")
 public final class User {
 
     private @Id
