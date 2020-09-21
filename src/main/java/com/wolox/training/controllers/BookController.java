@@ -3,7 +3,6 @@ package com.wolox.training.controllers;
 import com.wolox.training.exceptions.BookNotFoundException;
 import com.wolox.training.model.Book;
 import com.wolox.training.repositories.BookRepository;
-import java.util.List;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(BookController.BOOKS)
 public class BookController {
 
-    public static final String BOOKS = "/books";
+    public static final String BOOKS = "/api/books";
 
     @Autowired
     private BookRepository bookRepository;
@@ -41,18 +40,24 @@ public class BookController {
 
     @PutMapping
     public void updateBook(@RequestBody Book book) {
-        if(bookRepository.findById(book.getIdBook()).isPresent()) {
+        if (!bookRepository.findById(book.getIdBook()).isPresent()) {
             throw new BookNotFoundException("Book not found");
         }
         bookRepository.save(book);
     }
 
-    @DeleteMapping(value = "/{idBook}")
-    public void deleteBook(@PathVariable Long id) {
-        if(bookRepository.findById(id).isPresent()) {
+    @DeleteMapping(path = "/{idBook}")
+    public void deleteBook(@PathVariable Long idBook) {
+        if (!bookRepository.findById(idBook).isPresent()) {
             throw new BookNotFoundException("Book not found");
         }
-        bookRepository.deleteById(id);
+        bookRepository.deleteById(idBook);
+    }
+
+    @GetMapping(path = "/{idBook}")
+    public Book findBook(@PathVariable Long idBook) {
+        return bookRepository.findById(idBook)
+            .orElseThrow(() -> new BookNotFoundException("Book not found"));
     }
 
 }
