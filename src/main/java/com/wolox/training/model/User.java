@@ -1,5 +1,7 @@
 package com.wolox.training.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sun.istack.NotNull;
 import com.wolox.training.exceptions.BookAlreadyOwnedException;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -9,8 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotNull;
 
 @Entity(name = "Usser")
 public final class User {
@@ -24,7 +26,8 @@ public final class User {
     private String name;
     @NotNull
     private LocalDate birthdate;
-    @OneToMany(mappedBy = "user")
+    @OneToMany
+    @JoinColumn(name= "user_id")
     private List<Book> books;
 
     User() {
@@ -71,6 +74,7 @@ public final class User {
         return birthdate;
     }
 
+    @JsonIgnore
     public List<Book> getBooks() {
         return Collections.unmodifiableList(books);
     }
