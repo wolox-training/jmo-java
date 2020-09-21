@@ -2,7 +2,7 @@ package com.wolox.training.model;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.sun.istack.NotNull;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wolox.training.exceptions.BookAlreadyOwnedException;
 import io.swagger.annotations.ApiModel;
 import java.time.LocalDate;
@@ -13,23 +13,26 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 @Entity(name = "Usser")
 @ApiModel(description = "user from training java")
 public final class User {
 
-    private @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    Long idUser;
-    private @NotNull
-    String username;
-    private @NotNull
-    String name;
-    private @NotNull
-    LocalDate birthdate;
-    private @OneToMany(mappedBy = "user")
-    List<Book> books;
+    private Long idUser;
+    @NotNull
+    private String username;
+    @NotNull
+    private String name;
+    @NotNull
+    private LocalDate birthdate;
+    @OneToMany
+    @JoinColumn(name= "user_id")
+    private List<Book> books;
 
     User() {
     }
@@ -79,6 +82,7 @@ public final class User {
         return birthdate;
     }
 
+    @JsonIgnore
     public List<Book> getBooks() {
         return Collections.unmodifiableList(books);
     }
