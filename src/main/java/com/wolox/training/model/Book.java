@@ -1,6 +1,5 @@
 package com.wolox.training.model;
 
-import com.sun.istack.NotNull;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,35 +7,34 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import org.springframework.lang.Nullable;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public final class Book {
 
-    private @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    Long idBook;
-    private @Nullable
-    String genre;
-    private @NotNull
-    String author;
-    private @NotNull
-    String image;
-    private @NotNull
-    String title;
-    private @NotNull
-    String subtitle;
-    private @NotNull
-    String publisher;
-    private @NotNull
-    String year;
-    private @NotNull
-    Integer pages;
-    private @NotNull
-    String isbn;
-    private @ManyToOne
+    private Long idBook;
+    private String genre;
+    @NotNull
+    private String author;
+    @NotNull
+    private String image;
+    @NotNull
+    private String title;
+    @NotNull
+    private String subtitle;
+    @NotNull
+    private String publisher;
+    @NotNull
+    private String year;
+    @NotNull
+    private Integer pages;
+    @NotNull
+    private String isbn;
+    @ManyToOne
     @JoinColumn(name = "user_id")
-    User user;
+    private User user;
 
     Book() {
     }
