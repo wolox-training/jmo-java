@@ -1,5 +1,7 @@
 package com.wolox.training.model;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.sun.istack.NotNull;
 import com.wolox.training.exceptions.BookAlreadyOwnedException;
 import io.swagger.annotations.ApiModel;
@@ -42,18 +44,22 @@ public final class User {
     }
 
     public void setUsername(String username) {
+        checkNotNull(username , "Username is required");
         this.username = username;
     }
 
     public void setName(String name) {
+        checkNotNull(name , "Name is required");
         this.name = name;
     }
 
     public void setBirthdate(LocalDate birthdate) {
+        checkNotNull(birthdate , "Birthdate is required");
         this.birthdate = birthdate;
     }
 
     public void setBooks(List<Book> books) {
+        checkNotNull(books , "Books are not  should nulls");
         this.books = books;
     }
 
