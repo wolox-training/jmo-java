@@ -2,13 +2,17 @@ package com.wolox.training.model;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -34,15 +38,14 @@ public final class Book {
     private Integer pages;
     @NotNull
     private String isbn;
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @ManyToMany(mappedBy = "books")
+    private List<User> users;
 
     public Book() {
     }
 
     public Book(Long idBook, String genre, String author, String image, String title,
-        String subtitle, String publisher, String year, Integer pages, String isbn, User user) {
+        String subtitle, String publisher, String year, Integer pages, String isbn) {
         this.idBook = idBook;
         this.genre = genre;
         this.author = author;
@@ -53,7 +56,22 @@ public final class Book {
         this.year = year;
         this.pages = pages;
         this.isbn = isbn;
-        this.user = user;
+    }
+
+    public Book(String genre, @NotNull String author,
+        @NotNull String image, @NotNull String title,
+        @NotNull String subtitle, @NotNull String publisher,
+        @NotNull String year, @NotNull Integer pages,
+        @NotNull String isbn) {
+        this.genre = genre;
+        this.author = author;
+        this.image = image;
+        this.title = title;
+        this.subtitle = subtitle;
+        this.publisher = publisher;
+        this.year = year;
+        this.pages = pages;
+        this.isbn = isbn;
     }
 
     public void setGenre(String genre) {
@@ -100,9 +118,9 @@ public final class Book {
         this.isbn = isbn;
     }
 
-    public void setUser(User user) {
-        checkNotNull(user , "User is required");
-        this.user = user;
+    public void setUsers(List<User> users) {
+        checkNotNull(users , "User is required");
+        this.users = users;
     }
 
     public Long getIdBook() {
@@ -145,8 +163,8 @@ public final class Book {
         return isbn;
     }
 
-    public User getUser() {
-        return user;
+    public List<User> getUsers() {
+        return users;
     }
 
     @Override
@@ -184,13 +202,13 @@ public final class Book {
             year.equals(book.year) &&
             pages.equals(book.pages) &&
             isbn.equals(book.isbn) &&
-            user.equals(book.user);
+            users.equals(book.users);
     }
 
     @Override
     public int hashCode() {
         return Objects
             .hash(idBook, genre, author, image, title, subtitle, publisher, year, pages, isbn,
-                user);
+                users);
     }
 }
