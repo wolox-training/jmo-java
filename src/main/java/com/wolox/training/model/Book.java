@@ -2,12 +2,16 @@ package com.wolox.training.model;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
@@ -34,15 +38,14 @@ public final class Book {
     private Integer pages;
     @NotNull
     private String isbn;
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @ManyToMany
+    private List<User> users;
 
     Book() {
     }
 
     public Book(Long idBook, String genre, String author, String image, String title,
-        String subtitle, String publisher, String year, Integer pages, String isbn, User user) {
+        String subtitle, String publisher, String year, Integer pages, String isbn, List<User> users) {
         this.idBook = idBook;
         this.genre = genre;
         this.author = author;
@@ -53,7 +56,7 @@ public final class Book {
         this.year = year;
         this.pages = pages;
         this.isbn = isbn;
-        this.user = user;
+        this.users = users;
     }
 
     public void setGenre(String genre) {
@@ -100,9 +103,9 @@ public final class Book {
         this.isbn = isbn;
     }
 
-    public void setUser(User user) {
+    public void setUsers(List<User> users) {
         checkNotNull(user , "User is required");
-        this.user = user;
+        this.users = users;
     }
 
     public Long getIdBook() {
@@ -145,8 +148,8 @@ public final class Book {
         return isbn;
     }
 
-    public User getUser() {
-        return user;
+    public List<User> getUsers() {
+        return users;
     }
 
     @Override
@@ -184,13 +187,13 @@ public final class Book {
             year.equals(book.year) &&
             pages.equals(book.pages) &&
             isbn.equals(book.isbn) &&
-            user.equals(book.user);
+            users.equals(book.users);
     }
 
     @Override
     public int hashCode() {
         return Objects
             .hash(idBook, genre, author, image, title, subtitle, publisher, year, pages, isbn,
-                user);
+                users);
     }
 }
