@@ -38,7 +38,7 @@ public final class Book {
     @JoinColumn(name = "user_id")
     private User user;
 
-    Book() {
+    public Book() {
     }
 
     public Book(Long idBook, String genre, String author, String image, String title,
