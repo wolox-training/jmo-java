@@ -8,11 +8,15 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity(name = "Usser")
@@ -28,8 +32,7 @@ public final class User {
     private String name;
     @NotNull
     private LocalDate birthdate;
-    @OneToMany
-    @JoinColumn(name= "user_id")
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Book> books;
 
     User() {
