@@ -37,20 +37,6 @@ public final class User {
     public User() {
     }
 
-    public User(Long idUser, @NotNull String username,
-        @NotNull String name, @NotNull LocalDate birthdate) {
-        this.idUser = idUser;
-        this.username = username;
-        this.name = name;
-        this.birthdate = birthdate;
-    }
-
-    public User(String username, String name, LocalDate birthdate) {
-        this.username = username;
-        this.name = name;
-        this.birthdate = birthdate;
-    }
-
     public void setUsername(String username) {
         checkNotNull(username , "Username is required");
         this.username = username;

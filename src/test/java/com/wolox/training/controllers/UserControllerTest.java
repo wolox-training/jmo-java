@@ -60,7 +60,7 @@ class UserControllerTest {
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.content().json(
                 "{\n"
-                    + "    \"idUser\": 1,\n"
+                    + "    \"idUser\": null,\n"
                     + "    \"username\": \"Kevv\",\n"
                     + "    \"name\": \"Kevin\",\n"
                     + "    \"birthdate\": \"1994-05-02\"\n"
@@ -79,19 +79,19 @@ class UserControllerTest {
             .andExpect(MockMvcResultMatchers.content().json(
                 "[\n"
                     + "    {\n"
-                    + "        \"idUser\": 1,\n"
+                    + "        \"idUser\": null,\n"
                     + "        \"username\": \"Kevv\",\n"
                     + "        \"name\": \"Kevin\",\n"
                     + "        \"birthdate\": \"1994-05-02\"\n"
                     + "    },\n"
                     + "    {\n"
-                    + "        \"idUser\": 2,\n"
+                    + "        \"idUser\": null,\n"
                     + "        \"username\": \"CamuXee\",\n"
                     + "        \"name\": \"Jhoan\",\n"
                     + "        \"birthdate\": \"1994-07-22\"\n"
                     + "    },\n"
                     + "    {\n"
-                    + "        \"idUser\": 3,\n"
+                    + "        \"idUser\": null,\n"
                     + "        \"username\": \"Darvand\",\n"
                     + "        \"name\": \"David\",\n"
                     + "        \"birthdate\": \"1995-06-28\"\n"
@@ -103,7 +103,7 @@ class UserControllerTest {
     @Test
     void whenCreateUser_thenUserIsPersisted() throws Exception {
         String url = ("/api/users");
-        User defaultUser = UserFactory.withDefaultDataWithoutId();
+        User defaultUser = UserFactory.withDefaultData();
         Mockito.when(mockUserRepository.save(defaultUser)).thenReturn(user);
 
         mvc.perform(MockMvcRequestBuilders.post(url)
@@ -114,7 +114,7 @@ class UserControllerTest {
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.content().json(
                 "{\n"
-                    + "    \"idUser\": 1,\n"
+                    + "    \"idUser\": null,\n"
                     + "    \"username\": \"Kevv\",\n"
                     + "    \"name\": \"Kevin\",\n"
                     + "    \"birthdate\": \"1994-05-02\"\n"
@@ -125,7 +125,7 @@ class UserControllerTest {
     @Test
     void whenUpdateUser_ifExistsThenUserIsUpdated() throws Exception {
         String url = ("/api/users");
-        Mockito.when(mockUserRepository.findById(1L)).thenReturn(Optional.of(user));
+        Mockito.when(mockUserRepository.findById(user.getIdUser())).thenReturn(Optional.of(user));
         user.setUsername("Karateka");
         Mockito.when(mockUserRepository.save(user)).thenReturn(user);
 
@@ -140,7 +140,7 @@ class UserControllerTest {
     @Test
     void whenUpdateUser_ifNotExistsThenReturnError() throws Exception {
         String url = ("/api/users");
-        Mockito.when(mockUserRepository.findById(1L)).thenReturn(Optional.empty());
+        Mockito.when(mockUserRepository.findById(user.getIdUser())).thenReturn(Optional.empty());
 
         mvc.perform(MockMvcRequestBuilders.put(url)
             .content(objectMapper.writeValueAsString(user))

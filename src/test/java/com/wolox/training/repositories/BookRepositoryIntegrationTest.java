@@ -23,7 +23,7 @@ class BookRepositoryIntegrationTest {
     @Autowired
     private BookRepository bookRepository;
 
-    private final Book book = BookFactory.withDefaultDataWithoutId();
+    private final Book book = BookFactory.withDefaultData();
 
     @AfterEach
     public void setUp() {

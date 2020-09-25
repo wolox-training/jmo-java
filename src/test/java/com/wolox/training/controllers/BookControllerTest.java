@@ -42,7 +42,7 @@ class BookControllerTest {
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.content().json(
                 "{\n"
-                    + "    \"idBook\": 1,"
+                    + "    \"idBook\": null,"
                     + "    \"genre\": \"Fantasy\","
                     + "    \"author\": \"J. K. Rowlingn\","
                     + "    \"image\" : \"image.png\","
@@ -67,7 +67,7 @@ class BookControllerTest {
             .andExpect(MockMvcResultMatchers.content().json(
                 "[\n"
                     + "    {\n"
-                    + "        \"idBook\": 1,\n"
+                    + "        \"idBook\": null,\n"
                     + "        \"genre\": \"Fantasy\",\n"
                     + "        \"author\": \"J. K. Rowlingn\",\n"
                     + "        \"image\": \"image.png\",\n"
@@ -79,7 +79,7 @@ class BookControllerTest {
                     + "        \"isbn\": \"6453723453\"\n"
                     + "    },\n"
                     + "    {\n"
-                    + "        \"idBook\": 2,\n"
+                    + "        \"idBook\": null,\n"
                     + "        \"genre\": \"Adventure\",\n"
                     + "        \"author\": \"J. R. R. Tolkien\",\n"
                     + "        \"image\": \"image2.png\",\n"
@@ -91,7 +91,7 @@ class BookControllerTest {
                     + "        \"isbn\": \"148758\"\n"
                     + "    },\n"
                     + "    {\n"
-                    + "        \"idBook\": 3,\n"
+                    + "        \"idBook\": null,\n"
                     + "        \"genre\": \"Children's novel\",\n"
                     + "        \"author\": \"Rob Kidd\",\n"
                     + "        \"image\": \"image3.png\",\n"
@@ -109,7 +109,7 @@ class BookControllerTest {
     @Test
     void whenCreateBook_thenBookIsPersisted() throws Exception {
         String url = ("/api/books");
-        Book defaultBook = BookFactory.withDefaultDataWithoutId();
+        Book defaultBook = BookFactory.withDefaultData();
         Mockito.when(mockBookRepository.save(defaultBook)).thenReturn(book);
         mvc.perform(MockMvcRequestBuilders.post(url)
             .content(objectMapper.writeValueAsString(defaultBook))
@@ -118,7 +118,7 @@ class BookControllerTest {
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.content().json(
                 "{\n"
-                    + "    \"idBook\": 1,\n"
+                    + "    \"idBook\": null,\n"
                     + "    \"genre\": \"Fantasy\",\n"
                     + "    \"author\": \"J. K. Rowlingn\",\n"
                     + "    \"image\" : \"image.png\",\n"
@@ -135,7 +135,7 @@ class BookControllerTest {
     @Test
     void whenUpdateBook_ifExistsThenBookIsUpdated() throws Exception {
         String url = ("/api/books");
-        Mockito.when(mockBookRepository.findById(1L)).thenReturn(Optional.of(book));
+        Mockito.when(mockBookRepository.findById(book.getIdBook())).thenReturn(Optional.of(book));
         book.setImage("HappyHarry.png");
         Mockito.when(mockBookRepository.save(book)).thenReturn(book);
         mvc.perform(MockMvcRequestBuilders.put(url)
@@ -149,7 +149,7 @@ class BookControllerTest {
     @Test
     void whenUpdateBook_ifNotExistsThenReturnError() throws Exception {
         String url = ("/api/books");
-        Mockito.when(mockBookRepository.findById(1L)).thenReturn(Optional.empty());
+        Mockito.when(mockBookRepository.findById(book.getIdBook())).thenReturn(Optional.empty());
         mvc.perform(MockMvcRequestBuilders.put(url)
             .content(objectMapper.writeValueAsString(book))
             .contentType(MediaType.APPLICATION_JSON)

@@ -23,8 +23,8 @@ class UserRepositoryIntegrationTest {
     @Autowired
     private UserRepository userRepository;
 
-    private final User user = UserFactory.withDefaultDataWithoutId();
-    
+    private final User user = UserFactory.withDefaultData();
+
     @AfterEach
     public void setUp() {
         userRepository.deleteAll();
@@ -87,5 +87,5 @@ class UserRepositoryIntegrationTest {
         assertEquals("Kevin", persistedUser.getName());
         assertEquals(LocalDate.of(1994, 5, 2), persistedUser.getBirthdate());
     }
-    
+
 }

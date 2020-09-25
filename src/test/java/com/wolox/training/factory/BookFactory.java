@@ -8,186 +8,43 @@ import java.util.List;
 public class BookFactory {
 
     public static Book withDefaultData() {
-        return new Book(
-            1L,
-            "Fantasy",
-            "J. K. Rowlingn",
-            "image.png",
-            "Harry Potter",
-            "-",
-            "Bloomsbury",
-            "1997",
-            223,
-            "6453723453");
-    }
-
-    public static Book withDefaultDataWithoutId() {
-        return new Book(
-            "Fantasy",
-            "J. K. Rowlingn",
-            "image.png",
-            "Harry Potter",
-            "-",
-            "Bloomsbury",
-            "1997",
-            223,
-            "6453723453");
-    }
-
-    public static Book withNullAuthor() {
-        return new Book(
-            "Fantasy",
-            null,
-            "image.png",
-            "Harry Potter",
-            "-",
-            "Bloomsbury",
-            "1997",
-            223,
-            "6453723453");
-    }
-
-    public static Book withNullImage() {
-        return new Book(
-            "Fantasy",
-            "J. K. Rowlingn",
-            null,
-            "Harry Potter",
-            "-",
-            "Bloomsbury",
-            "1997",
-            223,
-            "6453723453");
-    }
-
-    public static Book withNullTitle() {
-        return new Book(
-            "Fantasy",
-            "J. K. Rowlingn",
-            "image.png",
-            null,
-            "-",
-            "Bloomsbury",
-            "1997",
-            223,
-            "6453723453");
-    }
-
-    public static Book withNullSubtitle() {
-        return new Book(
-            "Fantasy",
-            "J. K. Rowlingn",
-            "image.png",
-            "Harry Potter",
-            null,
-            "Bloomsbury",
-            "1997",
-            223,
-            "6453723453");
-    }
-
-    public static Book withNullPublisher() {
-        return new Book(
-            "Fantasy",
-            "J. K. Rowlingn",
-            "image.png",
-            "Harry Potter",
-            "-",
-            null,
-            "1997",
-            223,
-            "6453723453");
-    }
-
-    public static Book withNullYear() {
-        return new Book(
-            "Fantasy",
-            "J. K. Rowlingn",
-            "image.png",
-            "Harry Potter",
-            "-",
-            "Bloomsbury",
-            null,
-            223,
-            "6453723453");
-    }
-
-    public static Book withNullPages() {
-        return new Book(
-            "Fantasy",
-            "J. K. Rowlingn",
-            "image.png",
-            "Harry Potter",
-            "-",
-            "Bloomsbury",
-            "1997",
-            null,
-            "6453723453");
-    }
-
-    public static Book withNullIsbn() {
-        return new Book(
-            "Fantasy",
-            "J. K. Rowlingn",
-            "image.png",
-            "Harry Potter",
-            "-",
-            "Bloomsbury",
-            "1997",
-            223,
-            null);
-    }
-
-    public static Book withId(Long idUser) {
-        return new Book(
-            idUser,
-            "Fantasy",
-            "J. K. Rowlingn",
-            "image.png",
-            "Harry Potter",
-            "-",
-            "Bloomsbury",
-            "1997",
-            223,
-            "6453723453");
+        Book book = new Book();
+        book.setGenre("Fantasy");
+        book.setAuthor("J. K. Rowlingn");
+        book.setImage("image.png");
+        book.setTitle("Harry Potter");
+        book.setSubtitle("-");
+        book.setPublisher("Bloomsbury");
+        book.setYear("1997");
+        book.setPages(223);
+        book.setIsbn("6453723453");
+        return book;
     }
 
     public static List<Book> bookList() {
-        Book book1 = new Book(
-            1L,
-            "Fantasy",
-            "J. K. Rowlingn",
-            "image.png",
-            "Harry Potter",
-            "-",
-            "Bloomsbury",
-            "1997",
-            223,
-            "6453723453");
+        Book book1 = withDefaultData();
 
-        Book book2 = new Book(
-            2L,
-            "Adventure",
-            "J. R. R. Tolkien",
-            "image2.png",
-            "The Lord of the rings",
-            "-",
-            "Allen & Unwin",
-            "1954",
-            152,
-            "148758");
+        Book book2 = new Book();
+        book2.setGenre("Adventure");
+        book2.setAuthor("J. R. R. Tolkien");
+        book2.setImage("image2.png");
+        book2.setTitle("The Lord of the rings");
+        book2.setSubtitle("-");
+        book2.setPublisher("Allen & Unwin");
+        book2.setYear("1954");
+        book2.setPages(152);
+        book2.setIsbn("148758");
 
-        Book book3 = new Book(
-            3L,
-            "Children's novel",
-            "Rob Kidd",
-            "image3.png",
-            "Pirates of the Caribbean: Jack Sparrow",
-            "-",
-            "Disney Press",
-            "2006",
-            236,
-            "7346345");
+        Book book3 = new Book();
+        book3.setGenre("Children's novel");
+        book3.setAuthor("Rob Kidd");
+        book3.setImage("image3.png");
+        book3.setTitle("Pirates of the Caribbean: Jack Sparrow");
+        book3.setSubtitle("-");
+        book3.setPublisher("Disney Press");
+        book3.setYear("2006");
+        book3.setPages(236);
+        book3.setIsbn("7346345");
 
         return Arrays.asList(book1, book2, book3);
     }
