@@ -1,8 +1,8 @@
 package com.wolox.training.configuration;
 
+import com.wolox.training.constants.Message;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import springfox.documentation.RequestHandler;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -25,10 +25,10 @@ public class SwaggerConfig {
     }
 
     private ApiInfo apiEndPointInfo() {
-        return new ApiInfoBuilder().title("Training REST API")
-            .license("Apache 2.0")
-            .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
-            .version("1.0.0")
+        return new ApiInfoBuilder().title(Message.TITLE_APP)
+            .license(Message.LICENSE)
+            .licenseUrl(Message.LICENSE_URL)
+            .version(Message.APP_VERSION)
             .build();
     }
 }

@@ -18,5 +18,9 @@ public class Message {
     public static final String BOOK_CAN_NOT_NULL = "Book can not be null";
     public static final String BOOK_IS_ALREADY_ASSOCIATED = "Book is already associated";
     public static final String BOOK_CAN_BE_NULL = "Book can not be null";
+    public static final String TITLE_APP = "Training REST API";
+    public static final String LICENSE = "Apache 2.0";
+    public static final String LICENSE_URL = "http://www.apache.org/licenses/LICENSE-2.0.html";
+    public static final String APP_VERSION = "1.0.0";
 
 }
