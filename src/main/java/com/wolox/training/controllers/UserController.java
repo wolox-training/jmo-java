@@ -40,7 +40,7 @@ public class UserController {
     @ApiOperation(value = "Save a User", response = User.class)
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "Successfully saved user."),
-        @ApiResponse(code = 400, message = Message.USER_ALREADY_EXIST)
+        @ApiResponse(code = 400, message = "User already exist.")
     })
     public User createUser(@RequestBody User user) {
         try {
