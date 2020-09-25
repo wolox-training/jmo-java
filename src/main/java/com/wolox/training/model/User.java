@@ -3,6 +3,7 @@ package com.wolox.training.model;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.wolox.training.constants.Message;
 import com.wolox.training.exceptions.BookAlreadyOwnedException;
 import io.swagger.annotations.ApiModel;
 import java.time.LocalDate;
@@ -124,15 +125,15 @@ public final class User {
     }
 
     public void addBook(Book book) {
-        Objects.requireNonNull(book, "Book can not be null");
+        Objects.requireNonNull(book, Message.BOOK_CAN_NOT_NULL);
         if(books.contains(book)) {
-            throw new BookAlreadyOwnedException("Book is already associated");
+            throw new BookAlreadyOwnedException(Message.BOOK_IS_ALREADY_ASSOCIATED);
         }
         books.add(book);
     }
 
     public void removeBook(Book book) {
-        Objects.requireNonNull(book, "Book can not be null");
+        Objects.requireNonNull(book, Message.BOOK_CAN_BE_NULL);
         books.removeIf(b -> b.equals(book));
     }
 }

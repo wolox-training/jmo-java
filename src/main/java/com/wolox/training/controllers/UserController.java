@@ -1,5 +1,7 @@
 package com.wolox.training.controllers;
 
+import com.wolox.training.constants.Message;
+import com.wolox.training.constants.Route;
 import com.wolox.training.exceptions.BookNotFoundException;
 import com.wolox.training.exceptions.UserNotFoundException;
 import com.wolox.training.exceptions.UserHasNotTheBookException;
@@ -25,13 +27,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(UserController.USERS)
 @Api
+@RequestMapping(Route.USERS)
 public class UserController {
-
-    public static final String USERS = "/api/users";
-    public static final String ADD_BOOK = "/addBook/{idUser}/{idBook}";
-    public static final String REMOVE_BOOK = "/removeBook/{idUser}/{idBook}";
 
     @Autowired
     private UserRepository userRepository;
@@ -49,7 +47,7 @@ public class UserController {
         try {
                 return userRepository.save(user);
         } catch (ConstraintViolationException dataIntegrityViolationException) {
-            throw new DataIntegrityViolationException("User already exists.");
+            throw new DataIntegrityViolationException(Message.USER_ALREADY_EXIST);
         }
     }
 
@@ -61,36 +59,40 @@ public class UserController {
     @PutMapping
     public User updateUser(@RequestBody User user) {
         if (!userRepository.findById(user.getIdUser()).isPresent()) {
-            throw new UserNotFoundException("User not found");
+            throw new UserNotFoundException(Message.USER_NOT_FOUND);
         }
         return userRepository.save(user);
     }
 
-    @DeleteMapping(value = "/{idUser}")
+    @DeleteMapping(value = Route.ID_USER)
     public void deleteUser(@PathVariable Long idUser) {
         if (!userRepository.findById(idUser).isPresent()) {
-            throw new UserNotFoundException("User not found");
+            throw new UserNotFoundException(Message.USER_NOT_FOUND);
         }
         userRepository.deleteById(idUser);
     }
 
-    @PutMapping (value = ADD_BOOK)
+    @PutMapping(value = Route.ADD_BOOK)
     public void addBook(@PathVariable Long idUser, @PathVariable Long idBook) {
-        Book book = bookRepository.findById(idBook).orElseThrow(() -> new BookNotFoundException("Book not found"));
-        User user = userRepository.findById(idUser).orElseThrow(() -> new UserNotFoundException("User not found"));
+        Book book = bookRepository.findById(idBook)
+            .orElseThrow(() -> new BookNotFoundException(Message.BOOK_NOT_FOUND));
+        User user = userRepository.findById(idUser)
+            .orElseThrow(() -> new UserNotFoundException(Message.USER_NOT_FOUND));
 
         user.addBook(book);
 
         userRepository.save(user);
     }
 
-    @PutMapping (value = REMOVE_BOOK)
+    @PutMapping(value = Route.REMOVE_BOOK)
     public void removeBook(@PathVariable Long idUser, @PathVariable Long idBook) {
-        Book book = bookRepository.findById(idBook).orElseThrow(() -> new BookNotFoundException("Book not found"));
-        User user = userRepository.findById(idUser).orElseThrow(() -> new UserNotFoundException("User not found"));
+        Book book = bookRepository.findById(idBook)
+            .orElseThrow(() -> new BookNotFoundException(Message.BOOK_NOT_FOUND));
+        User user = userRepository.findById(idUser)
+            .orElseThrow(() -> new UserNotFoundException(Message.USER_NOT_FOUND));
 
-        if(!user.getBooks().contains(book)) {
-            throw new UserHasNotTheBookException("User has not the book");
+        if (!user.getBooks().contains(book)) {
+            throw new UserHasNotTheBookException(Message.USER_HAS_NOT_BOOK);
         }
 
         user.removeBook(book);
@@ -98,9 +100,9 @@ public class UserController {
         userRepository.save(user);
     }
 
-    @GetMapping(path = "/{idUser}")
+    @GetMapping(path = Route.ID_USER)
     public User findUser(@PathVariable Long idUser) {
         return userRepository.findById(idUser)
-            .orElseThrow(() -> new BookNotFoundException("User not found"));
+            .orElseThrow(() -> new BookNotFoundException(Message.USER_NOT_FOUND));
     }
 }

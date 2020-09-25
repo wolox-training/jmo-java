@@ -1,5 +1,7 @@
 package com.wolox.training.controllers;
 
+import com.wolox.training.constants.Message;
+import com.wolox.training.constants.Route;
 import com.wolox.training.exceptions.BookNotFoundException;
 import com.wolox.training.model.Book;
 import com.wolox.training.repositories.BookRepository;
@@ -17,10 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(BookController.BOOKS)
+@RequestMapping(Route.BOOKS)
 public class BookController {
-
-    public static final String BOOKS = "/api/books";
 
     @Autowired
     private BookRepository bookRepository;
@@ -30,7 +30,7 @@ public class BookController {
         try {
             return bookRepository.save(book);
         } catch (ConstraintViolationException dataIntegrityViolationException) {
-            throw new DataIntegrityViolationException("Book already exists.");
+            throw new DataIntegrityViolationException(Message.BOOK_ALREADY_EXIST);
         }
     }
 
@@ -42,23 +42,23 @@ public class BookController {
     @PutMapping
     public void updateBook(@Valid @RequestBody Book book) {
         if (!bookRepository.findById(book.getIdBook()).isPresent()) {
-            throw new BookNotFoundException("Book not found");
+                throw new BookNotFoundException(Message.BOOK_NOT_FOUND);
         }
         bookRepository.save(book);
     }
 
-    @DeleteMapping(path = "/{idBook}")
+    @DeleteMapping(path = Route.ID_BOOK)
     public void deleteBook(@PathVariable Long idBook) {
         if (!bookRepository.findById(idBook).isPresent()) {
-            throw new BookNotFoundException("Book not found");
+            throw new BookNotFoundException(Message.BOOK_NOT_FOUND);
         }
         bookRepository.deleteById(idBook);
     }
 
-    @GetMapping(path = "/{idBook}")
+    @GetMapping(path = Route.ID_BOOK)
     public Book findBook(@PathVariable Long idBook) {
         return bookRepository.findById(idBook)
-            .orElseThrow(() -> new BookNotFoundException("Book not found"));
+            .orElseThrow(() -> new BookNotFoundException(Message.BOOK_NOT_FOUND));
     }
 
 }
