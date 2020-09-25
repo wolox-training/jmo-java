@@ -3,6 +3,7 @@ package com.wolox.training.model;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.wolox.training.constants.Message;
 import com.wolox.training.exceptions.BookAlreadyOwnedException;
 import io.swagger.annotations.ApiModel;
 import java.time.LocalDate;
@@ -11,14 +12,10 @@ import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 @Entity(name = "Usser")
@@ -114,7 +111,7 @@ public final class User {
             username.equals(user.username) &&
             name.equals(user.name) &&
             birthdate.equals(user.birthdate) &&
-            books.equals(user.books);
+            Objects.equals(books, user.books);
     }
 
     @Override
@@ -123,15 +120,15 @@ public final class User {
     }
 
     public void addBook(Book book) {
-        Objects.requireNonNull(book, "Book can not be null");
+        Objects.requireNonNull(book, Message.BOOK_CAN_NOT_NULL);
         if(books.contains(book)) {
-            throw new BookAlreadyOwnedException("Book is already associated");
+            throw new BookAlreadyOwnedException(Message.BOOK_IS_ALREADY_ASSOCIATED);
         }
         books.add(book);
     }
 
     public void removeBook(Book book) {
-        Objects.requireNonNull(book, "Book can not be null");
+        Objects.requireNonNull(book, Message.BOOK_CAN_BE_NULL);
         books.removeIf(b -> b.equals(book));
     }
 }
