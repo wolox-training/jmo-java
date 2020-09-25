@@ -31,6 +31,8 @@ public final class User {
     private String name;
     @NotNull
     private LocalDate birthdate;
+    @NotNull
+    private String password;
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Book> books;
 
@@ -57,6 +59,11 @@ public final class User {
         this.books = books;
     }
 
+    public void setPassword(String password) {
+        checkNotNull(password , "Password are not  should nulls");
+        this.password = password;
+    }
+
     public Long getIdUser() {
         return idUser;
     }
@@ -71,6 +78,10 @@ public final class User {
 
     public LocalDate getBirthdate() {
         return birthdate;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     @JsonIgnore

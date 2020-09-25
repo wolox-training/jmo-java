@@ -12,27 +12,7 @@ public final class UserFactory {
         user.setUsername("Kevv");
         user.setName("Kevin");
         user.setBirthdate(LocalDate.of(1994, 5, 2));
-        return user;
-    }
-
-    public static User withNullUserame() {
-        User user = new User();
-        user.setName("Kevin");
-        user.setBirthdate(LocalDate.of(1994, 5, 2));
-        return user;
-    }
-
-    public static User withNullName() {
-        User user = new User();
-        user.setUsername("Kevv");
-        user.setBirthdate(LocalDate.of(1994, 5, 2));
-        return user;
-    }
-
-    public static User withNullBirthdate() {
-        User user = new User();
-        user.setUsername("Kevv");
-        user.setName("Kevin");
+        user.setPassword("123456");
         return user;
     }
 
@@ -43,12 +23,23 @@ public final class UserFactory {
         user2.setUsername("CamuXee");
         user2.setName("Jhoan");
         user2.setBirthdate(LocalDate.of(1994, 7, 22));
+        user2.setPassword("2846sbd");
 
         User user3 = new User();
         user3.setUsername("Darvand");
         user3.setName("David");
         user3.setBirthdate(LocalDate.of(1995, 6, 28));
+        user3.setPassword("hsgaaa$12");
 
         return Arrays.asList(user1, user2, user3);
+    }
+
+    public static User authorizedUser() {
+        User user = new User();
+        user.setUsername("admin");
+        user.setName("admin");
+        user.setBirthdate(LocalDate.of(1994, 5, 2));
+        user.setPassword("admin");
+        return user;
     }
 }

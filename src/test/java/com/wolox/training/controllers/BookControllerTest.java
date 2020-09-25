@@ -2,10 +2,13 @@ package com.wolox.training.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wolox.training.factory.BookFactory;
+import com.wolox.training.factory.UserFactory;
 import com.wolox.training.model.Book;
+import com.wolox.training.model.User;
 import com.wolox.training.repositories.BookRepository;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -13,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -34,6 +38,7 @@ class BookControllerTest {
     private final Book book = BookFactory.withDefaultData();
 
     @Test
+    @WithMockUser()
     void whenFindByIdWitchExists_thenBookIsReturned() throws Exception {
         Mockito.when(mockBookRepository.findById(1L)).thenReturn(Optional.of(book));
         String url = ("/api/books/1");
@@ -57,6 +62,7 @@ class BookControllerTest {
     }
 
     @Test
+    @WithMockUser()
     void whenListBook_thenAllBooksAreReturned() throws Exception {
         String url = ("/api/books");
         List<Book> books = BookFactory.bookList();
@@ -133,6 +139,7 @@ class BookControllerTest {
     }
 
     @Test
+    @WithMockUser()
     void whenUpdateBook_ifExistsThenBookIsUpdated() throws Exception {
         String url = ("/api/books");
         Mockito.when(mockBookRepository.findById(book.getIdBook())).thenReturn(Optional.of(book));
@@ -147,6 +154,7 @@ class BookControllerTest {
     }
 
     @Test
+    @WithMockUser()
     void whenUpdateBook_ifNotExistsThenReturnError() throws Exception {
         String url = ("/api/books");
         Mockito.when(mockBookRepository.findById(book.getIdBook())).thenReturn(Optional.empty());
@@ -159,6 +167,7 @@ class BookControllerTest {
     }
 
     @Test
+    @WithMockUser()
     void whenDeleteBook_ifExistsThenBookIsRemoved() throws Exception {
         String url = ("/api/books/1");
         Mockito.when(mockBookRepository.findById(1L)).thenReturn(Optional.of(book));
@@ -171,6 +180,7 @@ class BookControllerTest {
     }
 
     @Test
+    @WithMockUser()
     void whenDeleteBook_ifNotExistsThenBookReturnError() throws Exception {
         String url = ("/api/books/1");
         Mockito.when(mockBookRepository.findById(1L)).thenReturn(Optional.empty());
