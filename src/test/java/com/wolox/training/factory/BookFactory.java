@@ -8,17 +8,30 @@ import java.util.List;
 public class BookFactory {
 
     public static Book withDefaultData() {
-        Book book = new Book();
-        book.setGenre("Fantasy");
-        book.setAuthor("J. K. Rowlingn");
-        book.setImage("image.png");
-        book.setTitle("Harry Potter");
-        book.setSubtitle("-");
-        book.setPublisher("Bloomsbury");
-        book.setYear("1997");
-        book.setPages(223);
-        book.setIsbn("6453723453");
-        return book;
+        return new Book(
+            1L,
+            "Fantasy",
+            "J. K. Rowlingn",
+            "image.png",
+            "Harry Potter",
+            "-",
+            "Bloomsbury",
+            "1997",
+            223,
+            "6453723453");
+    }
+
+    public static Book withDefaultDataWithoutId() {
+        return new Book(
+            "Fantasy",
+            "J. K. Rowlingn",
+            "image.png",
+            "Harry Potter",
+            "-",
+            "Bloomsbury",
+            "1997",
+            223,
+            "6453723453");
     }
 
     public static Book withNullAuthor() {

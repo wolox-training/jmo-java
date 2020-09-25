@@ -3,6 +3,7 @@ package com.wolox.training.controllers;
 import com.wolox.training.exceptions.BookNotFoundException;
 import com.wolox.training.model.Book;
 import com.wolox.training.repositories.BookRepository;
+import javax.validation.Valid;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -25,7 +26,7 @@ public class BookController {
     private BookRepository bookRepository;
 
     @PostMapping
-    public Book createBook(@RequestBody Book book) {
+    public Book createBook(@Valid @RequestBody Book book) {
         try {
             return bookRepository.save(book);
         } catch (ConstraintViolationException dataIntegrityViolationException) {
@@ -39,7 +40,7 @@ public class BookController {
     }
 
     @PutMapping
-    public void updateBook(@RequestBody Book book) {
+    public void updateBook(@Valid @RequestBody Book book) {
         if (!bookRepository.findById(book.getIdBook()).isPresent()) {
             throw new BookNotFoundException("Book not found");
         }

@@ -11,6 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import javax.validation.Valid;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -44,9 +45,9 @@ public class UserController {
         @ApiResponse(code = 201, message = "Successfully saved user."),
         @ApiResponse(code = 400, message = "User already exist.")
     })
-    public User createUser(@RequestBody User user) {
+    public User createUser(@Valid @RequestBody User user) {
         try {
-            return userRepository.save(user);
+                return userRepository.save(user);
         } catch (ConstraintViolationException dataIntegrityViolationException) {
             throw new DataIntegrityViolationException("User already exists.");
         }

@@ -2,16 +2,13 @@ package com.wolox.training.model;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 
@@ -163,6 +160,7 @@ public final class Book {
         return isbn;
     }
 
+    @JsonIgnore
     public List<User> getUsers() {
         return users;
     }
@@ -193,7 +191,7 @@ public final class Book {
         }
         Book book = (Book) o;
         return Objects.equals(idBook, book.idBook) &&
-            genre.equals(book.genre) &&
+            Objects.equals(genre, book.genre) &&
             author.equals(book.author) &&
             image.equals(book.image) &&
             title.equals(book.title) &&
@@ -202,7 +200,7 @@ public final class Book {
             year.equals(book.year) &&
             pages.equals(book.pages) &&
             isbn.equals(book.isbn) &&
-            users.equals(book.users);
+            Objects.equals(users, book.users);
     }
 
     @Override

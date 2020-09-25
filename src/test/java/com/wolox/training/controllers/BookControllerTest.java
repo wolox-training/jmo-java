@@ -1,11 +1,11 @@
 package com.wolox.training.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wolox.training.factory.BookFactory;
 import com.wolox.training.model.Book;
 import com.wolox.training.repositories.BookRepository;
-import java.util.Arrays;
 import java.util.List;
-import org.junit.Before;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @RunWith(SpringRunner.class)
@@ -26,20 +27,22 @@ class BookControllerTest {
     private MockMvc mvc;
 
     @MockBean
-    private BookRepository mockbookRepository;
+    private BookRepository mockBookRepository;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private final Book book = BookFactory.withDefaultData();
 
     @Test
-    public void whenFindByIdWitchExists_thenBookIsReturned() throws Exception {
-        Mockito.when(mockbookRepository.findById(1L)).thenReturn(java.util.Optional.of(book));
+    void whenFindByIdWitchExists_thenBookIsReturned() throws Exception {
+        Mockito.when(mockBookRepository.findById(1L)).thenReturn(Optional.of(book));
         String url = ("/api/books/1");
         mvc.perform(MockMvcRequestBuilders.get(url)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.content().json(
                 "{\n"
-                    + "    \"idBook\": null,"
+                    + "    \"idBook\": 1,"
                     + "    \"genre\": \"Fantasy\","
                     + "    \"author\": \"J. K. Rowlingn\","
                     + "    \"image\" : \"image.png\","
@@ -54,10 +57,10 @@ class BookControllerTest {
     }
 
     @Test
-    void whenListBook_thenBookisReturned() throws Exception {
+    void whenListBook_thenAllBooksAreReturned() throws Exception {
         String url = ("/api/books");
         List<Book> books = BookFactory.bookList();
-        Mockito.when(mockbookRepository.findAll()).thenReturn(books);
+        Mockito.when(mockBookRepository.findAll()).thenReturn(books);
         mvc.perform(MockMvcRequestBuilders.get(url)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isOk())
@@ -73,8 +76,7 @@ class BookControllerTest {
                     + "        \"publisher\": \"Bloomsbury\",\n"
                     + "        \"year\": \"1997\",\n"
                     + "        \"pages\": 223,\n"
-                    + "        \"isbn\": \"6453723453\",\n"
-                    + "        \"users\": null\n"
+                    + "        \"isbn\": \"6453723453\"\n"
                     + "    },\n"
                     + "    {\n"
                     + "        \"idBook\": 2,\n"
@@ -86,8 +88,7 @@ class BookControllerTest {
                     + "        \"publisher\": \"Allen & Unwin\",\n"
                     + "        \"year\": \"1954\",\n"
                     + "        \"pages\": 152,\n"
-                    + "        \"isbn\": \"148758\",\n"
-                    + "        \"users\": null\n"
+                    + "        \"isbn\": \"148758\"\n"
                     + "    },\n"
                     + "    {\n"
                     + "        \"idBook\": 3,\n"
@@ -99,27 +100,29 @@ class BookControllerTest {
                     + "        \"publisher\": \"Disney Press\",\n"
                     + "        \"year\": \"2006\",\n"
                     + "        \"pages\": 236,\n"
-                    + "        \"isbn\": \"7346345\",\n"
-                    + "        \"users\": null\n"
+                    + "        \"isbn\": \"7346345\"\n"
                     + "    }\n"
                     + "]"
             ));
     }
 
     @Test
-    void whenCreateBook_thenBookisReturned() throws Exception {
+    void whenCreateBook_thenBookIsPersisted() throws Exception {
         String url = ("/api/books");
-        Mockito.when(mockbookRepository.save(book)).thenReturn(book);
+        Book defaultBook = BookFactory.withDefaultDataWithoutId();
+        Mockito.when(mockBookRepository.save(defaultBook)).thenReturn(book);
         mvc.perform(MockMvcRequestBuilders.post(url)
+            .content(objectMapper.writeValueAsString(defaultBook))
             .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.content().json(
                 "{\n"
-                    + "    \"idBook\": null,\n"
+                    + "    \"idBook\": 1,\n"
                     + "    \"genre\": \"Fantasy\",\n"
                     + "    \"author\": \"J. K. Rowlingn\",\n"
                     + "    \"image\" : \"image.png\",\n"
-                    + "    \"title\": \"Harry Poter\",\n"
+                    + "    \"title\": \"Harry Potter\",\n"
                     + "    \"subtitle\" : \"-\",\n"
                     + "    \"publisher\" :  \"Bloomsbury\",\n"
                     + "    \"year\" : \"1997\",\n"
@@ -129,9 +132,54 @@ class BookControllerTest {
             ));
     }
 
+    @Test
+    void whenUpdateBook_ifExistsThenBookIsUpdated() throws Exception {
+        String url = ("/api/books");
+        Mockito.when(mockBookRepository.findById(1L)).thenReturn(Optional.of(book));
+        book.setImage("HappyHarry.png");
+        Mockito.when(mockBookRepository.save(book)).thenReturn(book);
+        mvc.perform(MockMvcRequestBuilders.put(url)
+            .content(objectMapper.writeValueAsString(book))
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding("utf-8"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isOk());
+    }
 
+    @Test
+    void whenUpdateBook_ifNotExistsThenReturnError() throws Exception {
+        String url = ("/api/books");
+        Mockito.when(mockBookRepository.findById(1L)).thenReturn(Optional.empty());
+        mvc.perform(MockMvcRequestBuilders.put(url)
+            .content(objectMapper.writeValueAsString(book))
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding("utf-8"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
 
+    @Test
+    void whenDeleteBook_ifExistsThenBookIsRemoved() throws Exception {
+        String url = ("/api/books/1");
+        Mockito.when(mockBookRepository.findById(1L)).thenReturn(Optional.of(book));
+        Mockito.doNothing().when(mockBookRepository).deleteById(book.getIdBook());
+        mvc.perform(MockMvcRequestBuilders.delete(url)
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding("utf-8"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isOk());
+    }
 
-
+    @Test
+    void whenDeleteBook_ifNotExistsThenBookReturnError() throws Exception {
+        String url = ("/api/books/1");
+        Mockito.when(mockBookRepository.findById(1L)).thenReturn(Optional.empty());
+        Mockito.doNothing().when(mockBookRepository).deleteById(book.getIdBook());
+        mvc.perform(MockMvcRequestBuilders.delete(url)
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding("utf-8"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
 
 }

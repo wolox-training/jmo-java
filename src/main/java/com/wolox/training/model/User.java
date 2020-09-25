@@ -14,8 +14,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 
@@ -38,13 +36,12 @@ public final class User {
     public User() {
     }
 
-    public User(Long idUser, String username, String name, LocalDate birthdate,
-        List<Book> books) {
+    public User(Long idUser, @NotNull String username,
+        @NotNull String name, @NotNull LocalDate birthdate) {
         this.idUser = idUser;
         this.username = username;
         this.name = name;
         this.birthdate = birthdate;
-        this.books = books;
     }
 
     public User(String username, String name, LocalDate birthdate) {
@@ -118,7 +115,7 @@ public final class User {
             username.equals(user.username) &&
             name.equals(user.name) &&
             birthdate.equals(user.birthdate) &&
-            books.equals(user.books);
+            Objects.equals(books, user.books);
     }
 
     @Override
