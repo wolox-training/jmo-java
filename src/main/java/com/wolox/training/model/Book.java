@@ -1,12 +1,17 @@
 package com.wolox.training.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -32,7 +37,7 @@ public final class Book {
     private Integer pages;
     @NotNull
     private String isbn;
-    @ManyToMany
+    @ManyToMany(mappedBy = "books")
     private List<User> users;
 
     Book() {
@@ -133,6 +138,7 @@ public final class Book {
         return isbn;
     }
 
+    @JsonIgnore
     public List<User> getUsers() {
         return users;
     }
@@ -172,7 +178,7 @@ public final class Book {
             year.equals(book.year) &&
             pages.equals(book.pages) &&
             isbn.equals(book.isbn) &&
-            users.equals(book.users);
+            Objects.equals(users, book.users);
     }
 
     @Override
