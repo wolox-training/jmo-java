@@ -2,13 +2,10 @@ package com.wolox.training.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wolox.training.factory.BookFactory;
-import com.wolox.training.factory.UserFactory;
 import com.wolox.training.model.Book;
-import com.wolox.training.model.User;
 import com.wolox.training.repositories.BookRepository;
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;

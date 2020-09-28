@@ -14,4 +14,7 @@ public final class Route {
     public static final String ADD_BOOK = "/addBook/{idUser}/{idBook}";
     public static final String REMOVE_BOOK = "/removeBook/{idUser}/{idBook}";
     public static final String ID_USER = "/{idUser}";
+    public static final String URL_EXTERNAL_API = "https://openlibrary.org/isbn/{isbn}.json";
+    public static final String OPEN_LIBRARY = "/api/openLibrary";
+    public static final String ISBN = "/{isbn}";
 }

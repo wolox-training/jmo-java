@@ -1,11 +1,10 @@
 package com.wolox.training.factory;
 
 import com.wolox.training.model.Book;
-import com.wolox.training.model.User;
 import java.util.Arrays;
 import java.util.List;
 
-public class BookFactory {
+public final class BookFactory {
 
     public static Book withDefaultData() {
         Book book = new Book();

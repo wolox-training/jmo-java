@@ -1,7 +1,6 @@
 package com.wolox.training.security;
 
 import com.wolox.training.constants.Message;
-import com.wolox.training.exceptions.BookNotFoundException;
 import com.wolox.training.model.User;
 import com.wolox.training.repositories.UserRepository;
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
-    @Autowired
+    @Autowired(required = false)
     private UserRepository userRepository;
 
     @Autowired
