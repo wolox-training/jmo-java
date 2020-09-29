@@ -9,7 +9,6 @@ import com.wolox.training.factory.BookFactory;
 import com.wolox.training.model.Book;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +78,6 @@ class BookRepositoryIntegrationTest {
 
         assertNull(persistedBook);
     }
-
 
     private void validateBookAtributtes(Book persistedBook) {
         assertNotNull(persistedBook.getIdBook());

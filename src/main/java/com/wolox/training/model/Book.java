@@ -86,7 +86,7 @@ public final class Book {
     }
 
     public void setUsers(List<User> users) {
-        checkNotNull(users , "User is required");
+        checkNotNull(users, "User is required");
         this.users = users;
     }
 

@@ -4,7 +4,7 @@ import org.springframework.jmx.access.InvalidInvocationException;
 
 public class Message {
 
-    private Message(){
+    private Message() {
         throw new InvalidInvocationException(INVALID_INVOCATION);
     }
 

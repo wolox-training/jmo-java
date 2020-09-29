@@ -24,17 +24,17 @@ class BookTest {
             DynamicTest.dynamicTest("Null image test",
                 () -> assertThrows(NullPointerException.class, () -> book.setImage(null))),
             DynamicTest.dynamicTest("Null title test",
-                () -> assertThrows(NullPointerException.class, () ->  book.setTitle(null))),
+                () -> assertThrows(NullPointerException.class, () -> book.setTitle(null))),
             DynamicTest.dynamicTest("Null subtitle test",
-                () -> assertThrows(NullPointerException.class, () ->  book.setSubtitle(null))),
+                () -> assertThrows(NullPointerException.class, () -> book.setSubtitle(null))),
             DynamicTest.dynamicTest("Null publisher test",
-                () -> assertThrows(NullPointerException.class, () ->  book.setPublisher(null))),
+                () -> assertThrows(NullPointerException.class, () -> book.setPublisher(null))),
             DynamicTest.dynamicTest("Null year test",
-                () -> assertThrows(NullPointerException.class, () ->  book.setYear(null))),
+                () -> assertThrows(NullPointerException.class, () -> book.setYear(null))),
             DynamicTest.dynamicTest("Null isbn test",
-                () -> assertThrows(NullPointerException.class, () ->  book.setIsbn(null))),
+                () -> assertThrows(NullPointerException.class, () -> book.setIsbn(null))),
             DynamicTest.dynamicTest("Null pages test",
-                () -> assertThrows(NullPointerException.class, () ->  book.setPages(null))));
+                () -> assertThrows(NullPointerException.class, () -> book.setPages(null))));
     }
 
 }

@@ -40,27 +40,27 @@ public final class User {
     }
 
     public void setUsername(String username) {
-        checkNotNull(username , "Username is required");
+        checkNotNull(username, "Username is required");
         this.username = username;
     }
 
     public void setName(String name) {
-        checkNotNull(name , "Name is required");
+        checkNotNull(name, "Name is required");
         this.name = name;
     }
 
     public void setBirthdate(LocalDate birthdate) {
-        checkNotNull(birthdate , "Birthdate is required");
+        checkNotNull(birthdate, "Birthdate is required");
         this.birthdate = birthdate;
     }
 
     public void setBooks(List<Book> books) {
-        checkNotNull(books , "Books are not  should nulls");
+        checkNotNull(books, "Books are not  should nulls");
         this.books = books;
     }
 
     public void setPassword(String password) {
-        checkNotNull(password , "Password are not  should nulls");
+        checkNotNull(password, "Password are not  should nulls");
         this.password = password;
     }
 
@@ -123,7 +123,7 @@ public final class User {
 
     public void addBook(Book book) {
         Objects.requireNonNull(book, Message.BOOK_CAN_NOT_NULL);
-        if(books.contains(book)) {
+        if (books.contains(book)) {
             throw new BookAlreadyOwnedException(Message.BOOK_IS_ALREADY_ASSOCIATED);
         }
         books.add(book);
