@@ -106,7 +106,7 @@ public final class User {
             username.equals(user.username) &&
             name.equals(user.name) &&
             birthdate.equals(user.birthdate) &&
-            books.equals(user.books);
+            Objects.equals(books, user.books);
     }
 
     @Override
