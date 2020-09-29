@@ -8,6 +8,7 @@ import com.wolox.training.mapper.BookMapper;
 import com.wolox.training.model.Book;
 import com.wolox.training.repositories.BookRepository;
 import com.wolox.training.services.OpenLibraryService;
+import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
 import org.hibernate.exception.ConstraintViolationException;
@@ -74,6 +75,13 @@ public class BookController {
         Optional<Book> book = bookRepository.findByIsbn(isbn);
         return book.map(value -> ResponseEntity.ok(BookMapper.modelToDto(value)))
             .orElseGet(() -> openLibraryService.bookInfo(isbn));
+    }
+
+    @GetMapping(path = Route.BOOK_PARAMS)
+    public ResponseEntity<List<Book>> findByParameters(@PathVariable String publisher,
+        @PathVariable String genre, @PathVariable String year) {
+        List<Book> books = bookRepository.findyByParameters(publisher, genre, year);
+        return ResponseEntity.ok(books);
     }
 
 }

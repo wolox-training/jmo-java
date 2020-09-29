@@ -254,4 +254,61 @@ class BookControllerTest {
             .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
+    @Test
+    @WithMockUser()
+    void whenFindByParameters_ThenReturnListOfBooks() throws Exception {
+        List<Book> books = BookFactory.bookListWithSameParameters();
+
+        Mockito.when(mockBookRepository.findyByParameters("Walt Disney",
+            "Adventure", "1988")).thenReturn(books);
+
+        String url = ("/api/books/Walt Disney/Adventure/1988");
+
+        mvc.perform(MockMvcRequestBuilders.get(url)
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding("utf-8"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.content().json(
+                "[\n"
+                    + "    {\n"
+                    + "        \"idBook\": null,\n"
+                    + "        \"genre\": \"Adventure\",\n"
+                    + "        \"author\": \"John Lasseter\",\n"
+                    + "        \"image\": \"Buddy.png\",\n"
+                    + "        \"title\": \"Toy Story\",\n"
+                    + "        \"subtitle\": \"-\",\n"
+                    + "        \"publisher\": \"Walt Disney\",\n"
+                    + "        \"year\": \"1988\",\n"
+                    + "        \"pages\": 392,\n"
+                    + "        \"isbn\": \"8472821\"\n"
+                    + "    },\n"
+                    + "    {\n"
+                    + "        \"idBook\": null,\n"
+                    + "        \"genre\": \"Adventure\",\n"
+                    + "        \"author\": \"Don Hahn\",\n"
+                    + "        \"image\": \"Lion-King.png\",\n"
+                    + "        \"title\": \"The Lion King\",\n"
+                    + "        \"subtitle\": \"-\",\n"
+                    + "        \"publisher\": \"Walt Disney\",\n"
+                    + "        \"year\": \"1988\",\n"
+                    + "        \"pages\": 98,\n"
+                    + "        \"isbn\": \"1234701\"\n"
+                    + "    },\n"
+                    + "    {\n"
+                    + "        \"idBook\": null,\n"
+                    + "        \"genre\": \"Adventure\",\n"
+                    + "        \"author\": \"John Musker\",\n"
+                    + "        \"image\": \"SadMoana.png\",\n"
+                    + "        \"title\": \"Moana\",\n"
+                    + "        \"subtitle\": \"-\",\n"
+                    + "        \"publisher\": \"Walt Disney\",\n"
+                    + "        \"year\": \"1988\",\n"
+                    + "        \"pages\": 142,\n"
+                    + "        \"isbn\": \"986273645\"\n"
+                    + "    }\n"
+                    + "]"
+            ));
+    }
+
 }
