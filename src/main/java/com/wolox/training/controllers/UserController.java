@@ -3,8 +3,8 @@ package com.wolox.training.controllers;
 import com.wolox.training.constants.Message;
 import com.wolox.training.constants.Route;
 import com.wolox.training.exceptions.BookNotFoundException;
-import com.wolox.training.exceptions.UserNotFoundException;
 import com.wolox.training.exceptions.UserHasNotTheBookException;
+import com.wolox.training.exceptions.UserNotFoundException;
 import com.wolox.training.model.Book;
 import com.wolox.training.model.User;
 import com.wolox.training.repositories.BookRepository;
@@ -16,6 +16,7 @@ import io.swagger.annotations.ApiResponses;
 import javax.validation.Valid;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,8 +39,11 @@ public class UserController {
     @Autowired
     private BookRepository bookRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserController(@Lazy PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @PostMapping
     @ApiOperation(value = "Save a User", response = User.class)

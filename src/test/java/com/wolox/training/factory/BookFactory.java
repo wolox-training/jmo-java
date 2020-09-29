@@ -1,7 +1,6 @@
 package com.wolox.training.factory;
 
 import com.wolox.training.model.Book;
-import com.wolox.training.model.User;
 import java.util.Arrays;
 import java.util.List;
 

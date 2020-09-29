@@ -44,7 +44,7 @@ class UserControllerTest {
 
     private final User user = UserFactory.withDefaultData();
 
-    private final Book book = BookFactory.withDefaultData() ;
+    private final Book book = BookFactory.withDefaultData();
 
     @BeforeEach
     void before() {
