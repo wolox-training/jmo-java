@@ -13,11 +13,15 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import javax.validation.Valid;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -120,5 +124,20 @@ public class UserController {
     @GetMapping(path = "/username")
     public String currentUserName(Authentication authentication) {
         return authentication.getName();
+    }
+
+    @GetMapping(path = Route.USER_PARAMS)
+    public ResponseEntity<List<User>> findByParameters(@Valid @PathVariable String name,
+        @Valid @PathVariable String startDate,
+        @Valid @PathVariable String endDate) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        LocalDate start = LocalDate.parse(startDate, formatter);
+        LocalDate end = LocalDate.parse(endDate, formatter);
+
+        List<User> users = userRepository
+            .findByNameContainingIgnoreCaseAndBirthdateBetween(name, start, end);
+        return ResponseEntity.ok(users);
     }
 }

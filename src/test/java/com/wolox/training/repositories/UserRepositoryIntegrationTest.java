@@ -8,7 +8,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.wolox.training.factory.UserFactory;
 import com.wolox.training.model.User;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -80,7 +83,6 @@ class UserRepositoryIntegrationTest {
         assertNull(persistedUser);
     }
 
-
     private void validateUserAttributes(User persistedUser) {
         assertNotNull(persistedUser.getIdUser());
         assertEquals("Kevv", persistedUser.getUsername());
@@ -88,4 +90,42 @@ class UserRepositoryIntegrationTest {
         assertEquals(LocalDate.of(1994, 5, 2), persistedUser.getBirthdate());
     }
 
+    @Test
+    void whenFindByParameters_ThenReturnListOfUsers() {
+        List<User> savedUsers = listPersistedUsers();
+
+        LocalDate startDate = LocalDate.of(1915, 2, 21);
+        LocalDate endDate = LocalDate.of(1925, 7, 10);
+
+        List<User> users = userRepository.findByNameContainingIgnoreCaseAndBirthdateBetween("nando",
+            startDate, endDate);
+
+        assertEquals(3, users.size());
+        assertTrue(savedUsers.containsAll(users));
+    }
+
+    @Test
+    void whenFindByParameters_ThenShouldIgnoreCaseAndReturnListOfUsers() {
+        List<User> savedUsers = listPersistedUsers();
+
+        LocalDate startDate = LocalDate.of(1915, 2, 21);
+        LocalDate endDate = LocalDate.of(1925, 7, 10);
+
+        List<User> users = userRepository.findByNameContainingIgnoreCaseAndBirthdateBetween("NaNDo",
+            startDate, endDate);
+
+        assertEquals(3, users.size());
+        assertTrue(savedUsers.containsAll(users));
+    }
+
+    private List<User> listPersistedUsers() {
+        List<User> userListWithParams = UserFactory.userlistWithParams();
+        List<User> userList = UserFactory.userList();
+
+        List<User> list = Stream.of(userListWithParams, userList)
+            .flatMap(Collection::stream)
+            .collect(Collectors.toList());
+
+        return userRepository.saveAll(list);
+    }
 }

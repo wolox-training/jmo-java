@@ -7,7 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.wolox.training.factory.BookFactory;
 import com.wolox.training.model.Book;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -100,5 +103,23 @@ class BookRepositoryIntegrationTest {
         assertEquals("1997", persistedBook.getYear());
         assertEquals(Integer.valueOf(223), persistedBook.getPages());
         assertEquals("6453723453", persistedBook.getIsbn());
+    }
+
+    @Test
+    void whenFindyByParams_ThenReturnListOfBooks() {
+        List<Book> userListWithParams = BookFactory.bookListWithSameParameters();
+        List<Book> userList = BookFactory.bookList();
+
+        List<Book> list = Stream.of(userListWithParams, userList)
+            .flatMap(Collection::stream)
+            .collect(Collectors.toList());
+
+        List<Book> savedBooks = bookRepository.saveAll(userList);
+
+        List<Book> books = bookRepository
+            .findByPublisherAndGenreAndYear("Walt Disney", "Adventure", "1988");
+
+        assertEquals(3, savedBooks.size());
+        assertTrue(savedBooks.containsAll(books));
     }
 }
