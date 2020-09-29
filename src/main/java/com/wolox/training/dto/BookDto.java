@@ -2,8 +2,6 @@ package com.wolox.training.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
-import java.util.List;
-import springfox.documentation.spring.web.json.Json;
 
 public class BookDto {
 

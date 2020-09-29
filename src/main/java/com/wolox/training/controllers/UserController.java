@@ -13,11 +13,16 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import javax.validation.Valid;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -120,5 +125,15 @@ public class UserController {
     @GetMapping(path = "/username")
     public String currentUserName(Authentication authentication) {
         return authentication.getName();
+    }
+
+    @GetMapping(path = Route.USER_PARAMS)
+    public ResponseEntity<List<User>> findByParameters(@PathVariable String name,
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @PathVariable LocalDate startDate,
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @PathVariable LocalDate endDate) {
+
+        List<User> users = userRepository
+            .findByNameContainingIgnoreCaseAndBirthdateBetween(name, startDate, endDate);
+        return ResponseEntity.ok(users);
     }
 }

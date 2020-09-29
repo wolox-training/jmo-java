@@ -34,12 +34,25 @@ public final class UserFactory {
         return Arrays.asList(user1, user2, user3);
     }
 
-    public static User authorizedUser() {
-        User user = new User();
-        user.setUsername("admin");
-        user.setName("admin");
-        user.setBirthdate(LocalDate.of(1994, 5, 2));
-        user.setPassword("admin");
-        return user;
+    public static List<User> userlistWithParams() {
+        User user1 = new User();
+        user1.setUsername("Xand");
+        user1.setName("Fernando Andres");
+        user1.setBirthdate(LocalDate.of(1921, 7, 22));
+        user1.setPassword("euabdm");
+
+        User user2 = new User();
+        user2.setUsername("Clow");
+        user2.setName("Fernando Emilio");
+        user2.setBirthdate(LocalDate.of(1916, 9, 16));
+        user2.setPassword("anit");
+
+        User user3 = new User();
+        user3.setUsername("Batist");
+        user3.setName("Fabio Fernando");
+        user3.setBirthdate(LocalDate.of(1923, 6, 28));
+        user3.setPassword("2cfeadf");
+
+        return Arrays.asList(user1, user2, user3);
     }
 }

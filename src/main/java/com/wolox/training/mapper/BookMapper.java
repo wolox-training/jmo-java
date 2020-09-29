@@ -12,6 +12,7 @@ import org.springframework.jmx.access.InvalidInvocationException;
 public final class BookMapper {
 
     public static final ObjectMapper objectMapper = new ObjectMapper();
+
     private BookMapper() {
         throw new InvalidInvocationException(Message.INVALID_INVOCATION);
     }
