@@ -10,6 +10,8 @@ import com.wolox.training.model.User;
 import com.wolox.training.repositories.BookRepository;
 import com.wolox.training.repositories.UserRepository;
 import com.wolox.training.security.CustomAuthenticationProvider;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +33,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
-class   UserControllerTest {
+class UserControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -308,5 +310,51 @@ class   UserControllerTest {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.content().string("Karateka"));
+    }
+
+    @Test
+    @WithMockUser()
+    void whenFindByParameters_ThenReturnListOfUsers() throws Exception {
+        List<User> users = UserFactory.userlistWithParams();
+        String startDate = "1915-02-21";
+        String endDate = "1926-07-10";
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        LocalDate start = LocalDate.parse(startDate, formatter);
+        LocalDate end = LocalDate.parse(endDate, formatter);
+
+        Mockito.when(mockUserRepository.findByNameContainingIgnoreCaseAndBirthdateBetween("nando",
+            start, end)).thenReturn(users);
+
+        String url = ("/api/users/nando/1915-02-21/1926-07-10");
+
+        mvc.perform(MockMvcRequestBuilders.get(url)
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding("utf-8"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.content().json(
+                "[\n"
+                    + "    {\n"
+                    + "        \"idUser\": null,\n"
+                    + "        \"username\": \"Xand\",\n"
+                    + "        \"name\": \"Fernando Andres\",\n"
+                    + "        \"birthdate\": \"1921-07-22\"\n"
+                    + "    },\n"
+                    + "    {\n"
+                    + "        \"idUser\": null,\n"
+                    + "        \"username\": \"Clow\",\n"
+                    + "        \"name\": \"Fernando Emilio\",\n"
+                    + "        \"birthdate\": \"1916-09-16\"\n"
+                    + "    },\n"
+                    + "    {\n"
+                    + "        \"idUser\": null,\n"
+                    + "        \"username\": \"Batist\",\n"
+                    + "        \"name\": \"Favio Fernando\",\n"
+                    + "        \"birthdate\": \"1923-06-28\"\n"
+                    + "    }\n"
+                    + "]"
+            ));
     }
 }
