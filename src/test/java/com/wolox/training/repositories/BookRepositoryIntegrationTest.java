@@ -10,12 +10,12 @@ import com.wolox.training.model.Book;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @DataJpaTest
 class BookRepositoryIntegrationTest {
 
@@ -98,7 +98,7 @@ class BookRepositoryIntegrationTest {
         assertEquals("-", persistedBook.getSubtitle());
         assertEquals("Bloomsbury", persistedBook.getPublisher());
         assertEquals("1997", persistedBook.getYear());
-        assertEquals(223, persistedBook.getPages());
+        assertEquals(Integer.valueOf(223), persistedBook.getPages());
         assertEquals("6453723453", persistedBook.getIsbn());
     }
 }

@@ -9,25 +9,27 @@ import com.wolox.training.model.Book;
 import com.wolox.training.model.User;
 import com.wolox.training.repositories.BookRepository;
 import com.wolox.training.repositories.UserRepository;
+import com.wolox.training.security.CustomAuthenticationProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
 class   UserControllerTest {
 
@@ -39,6 +41,12 @@ class   UserControllerTest {
 
     @MockBean
     private BookRepository mockBookRepository;
+
+    @MockBean
+    private CustomAuthenticationProvider customAuthenticationProvider;
+
+    @MockBean
+    private PasswordEncoder passwordEncoder;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -108,6 +116,7 @@ class   UserControllerTest {
         String url = ("/api/users");
         User defaultUser = UserFactory.withDefaultData();
         Mockito.when(mockUserRepository.save(defaultUser)).thenReturn(user);
+        Mockito.when(passwordEncoder.encode("123456")).thenReturn(user.getPassword());
 
         mvc.perform(MockMvcRequestBuilders.post(url)
             .content(objectMapper.writeValueAsString(defaultUser))
