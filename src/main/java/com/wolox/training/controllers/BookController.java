@@ -2,13 +2,18 @@ package com.wolox.training.controllers;
 
 import com.wolox.training.constants.Message;
 import com.wolox.training.constants.Route;
+import com.wolox.training.dto.BookDto;
 import com.wolox.training.exceptions.BookNotFoundException;
+import com.wolox.training.mapper.BookMapper;
 import com.wolox.training.model.Book;
 import com.wolox.training.repositories.BookRepository;
+import com.wolox.training.services.OpenLibraryService;
+import java.util.Optional;
 import javax.validation.Valid;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +29,9 @@ public class BookController {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private OpenLibraryService openLibraryService;
 
     @PostMapping
     public Book createBook(@Valid @RequestBody Book book) {
@@ -59,6 +67,13 @@ public class BookController {
     public Book findBook(@PathVariable Long idBook) {
         return bookRepository.findById(idBook)
             .orElseThrow(() -> new BookNotFoundException(Message.BOOK_NOT_FOUND));
+    }
+
+    @GetMapping(path = Route.ISBN)
+    public ResponseEntity<BookDto> findByIsbn(@Valid @PathVariable String isbn) {
+        Optional<Book> book = bookRepository.findByIsbn(isbn);
+        return book.map(value -> ResponseEntity.ok(BookMapper.modelToDto(value)))
+            .orElseGet(() -> openLibraryService.bookInfo(isbn));
     }
 
 }

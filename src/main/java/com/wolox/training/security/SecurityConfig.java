@@ -18,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @ComponentScan("com.wolox.training.security")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired(required = true)
+    @Autowired
     private CustomAuthenticationProvider authProvider;
 
     @Bean
