@@ -1,10 +1,18 @@
 package com.wolox.training.model;
 
-import javax.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.List;
+import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public final class Book {
@@ -29,12 +37,14 @@ public final class Book {
     private Integer pages;
     @NotNull
     private String isbn;
+    @ManyToMany(mappedBy = "books")
+    private List<User> users;
 
     Book() {
     }
 
     public Book(Long idBook, String genre, String author, String image, String title,
-        String subtitle, String publisher, String year, Integer pages, String isbn) {
+        String subtitle, String publisher, String year, Integer pages, String isbn, List<User> users) {
         this.idBook = idBook;
         this.genre = genre;
         this.author = author;
@@ -45,6 +55,7 @@ public final class Book {
         this.year = year;
         this.pages = pages;
         this.isbn = isbn;
+        this.users = users;
     }
 
     public void setGenre(String genre) {
@@ -81,6 +92,10 @@ public final class Book {
 
     public void setIsbn(String isbn) {
         this.isbn = isbn;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 
     public Long getIdBook() {
@@ -123,6 +138,11 @@ public final class Book {
         return isbn;
     }
 
+    @JsonIgnore
+    public List<User> getUsers() {
+        return users;
+    }
+
     @Override
     public String toString() {
         return "Book{" +
@@ -137,5 +157,34 @@ public final class Book {
             ", pages=" + pages +
             ", isbn='" + isbn + '\'' +
             '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Book book = (Book) o;
+        return Objects.equals(idBook, book.idBook) &&
+            genre.equals(book.genre) &&
+            author.equals(book.author) &&
+            image.equals(book.image) &&
+            title.equals(book.title) &&
+            subtitle.equals(book.subtitle) &&
+            publisher.equals(book.publisher) &&
+            year.equals(book.year) &&
+            pages.equals(book.pages) &&
+            isbn.equals(book.isbn) &&
+            Objects.equals(users, book.users);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects
+            .hash(idBook, genre, author, image, title, subtitle, publisher, year, pages, isbn,
+                users);
     }
 }
