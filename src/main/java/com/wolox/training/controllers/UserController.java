@@ -18,6 +18,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -114,5 +115,10 @@ public class UserController {
     public User findUser(@PathVariable Long idUser) {
         return userRepository.findById(idUser)
             .orElseThrow(() -> new BookNotFoundException(Message.USER_NOT_FOUND));
+    }
+
+    @GetMapping(path = "/username")
+    public String currentUserName(Authentication authentication) {
+        return authentication.getName();
     }
 }

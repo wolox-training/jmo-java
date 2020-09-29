@@ -29,7 +29,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
-class UserControllerTest {
+class   UserControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -286,5 +286,18 @@ class UserControllerTest {
             .characterEncoding("utf-8"))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(username = "Karateka")
+    void whenInvokerCurrentUserName_ThenReturnedUserName() throws Exception {
+        String url = ("/api/users/username");
+
+        mvc.perform(MockMvcRequestBuilders.get(url)
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding("utf-8"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.content().string("Karateka"));
     }
 }
