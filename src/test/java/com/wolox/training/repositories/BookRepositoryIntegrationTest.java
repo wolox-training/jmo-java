@@ -107,7 +107,7 @@ class BookRepositoryIntegrationTest {
     }
 
     @Test
-    void whenFindyByParams_ThenReturnListOfBooks() {
+    void whenFindByPublisherAndGenreAndYear_ThenReturnListOfBooks() {
         List<Book> userListWithParams = BookFactory.bookListWithSameParameters();
         List<Book> userList = BookFactory.bookList();
 
@@ -115,12 +115,12 @@ class BookRepositoryIntegrationTest {
             .flatMap(Collection::stream)
             .collect(Collectors.toList());
 
-        List<Book> savedBooks = bookRepository.saveAll(userList);
+        List<Book> savedBooks = bookRepository.saveAll(list);
 
         List<Book> books = bookRepository
             .findByPublisherAndGenreAndYear("Walt Disney", "Adventure", "1988");
 
-        assertEquals(3, savedBooks.size());
+        assertEquals(3, books.size());
         assertTrue(savedBooks.containsAll(books));
     }
 }

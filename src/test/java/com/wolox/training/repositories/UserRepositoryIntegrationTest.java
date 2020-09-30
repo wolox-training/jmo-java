@@ -91,7 +91,7 @@ class UserRepositoryIntegrationTest {
     }
 
     @Test
-    void whenFindByParameters_ThenReturnListOfUsers() {
+    void whenFindByNameAndBirthdate_ThenReturnListOfUsers() {
         List<User> savedUsers = listPersistedUsers();
 
         LocalDate startDate = LocalDate.of(1915, 2, 21);
@@ -105,7 +105,7 @@ class UserRepositoryIntegrationTest {
     }
 
     @Test
-    void whenFindByParameters_ThenShouldIgnoreCaseAndReturnListOfUsers() {
+    void whenFindByNameAndBirthdate_ThenShouldIgnoreCaseAndReturnListOfUsers() {
         List<User> savedUsers = listPersistedUsers();
 
         LocalDate startDate = LocalDate.of(1915, 2, 21);
