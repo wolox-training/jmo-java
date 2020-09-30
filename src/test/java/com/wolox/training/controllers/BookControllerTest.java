@@ -263,7 +263,7 @@ class BookControllerTest {
 
         mvc.perform(MockMvcRequestBuilders.get(url)
             .contentType(MediaType.APPLICATION_JSON)
-            .characterEncoding("utf-8"))
+            .characterEncoding(UTF_8))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.content().json(
