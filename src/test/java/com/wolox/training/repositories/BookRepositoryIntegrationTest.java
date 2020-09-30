@@ -6,14 +6,16 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.wolox.training.factory.BookFactory;
-import com.wolox.training.factory.UserFactory;
 import com.wolox.training.model.Book;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -108,6 +110,49 @@ class BookRepositoryIntegrationTest {
 
     @Test
     void whenFindByPublisherAndGenreAndYear_ThenReturnListOfBooks() {
+        List<Book> savedBooks = listPersistedBooks();
+
+        List<Book> books = bookRepository
+            .findByPublisherAndGenreAndYear("Walt Disney", "Adventure", "1988");
+
+        assertEquals(3, books.size());
+        assertTrue(savedBooks.containsAll(books));
+    }
+
+    @Test
+    void whenFindByPublisherAndNullGenreAndNullYear_ThenReturnListOfBooks() {
+        List<Book> savedBooks = listPersistedBooks();
+
+        List<Book> books = bookRepository
+            .findByOptionalPublisherAndGenreAndYear("Walt Disney", "Adventure", null);
+
+        assertEquals(3, books.size());
+        assertTrue(savedBooks.containsAll(books));
+    }
+
+    @Test
+    void whenFindByNullPublisherANullGenreAndNullYear_ThenReturnListOfBooks() {
+        List<Book> savedBooks = listPersistedBooks();
+
+        List<Book> books = bookRepository
+            .findByOptionalPublisherAndGenreAndYear("Walt Disney", null, null);
+
+        assertEquals(3, books.size());
+        assertTrue(savedBooks.containsAll(books));
+    }
+
+    @Test
+    void whenFindByOptionalPublisherAndNullGenreAndNullYear_ThenReturnListOfBooks() {
+        List<Book> savedBooks = listPersistedBooks();
+
+        List<Book> books = bookRepository
+            .findByOptionalPublisherAndGenreAndYear("Walt Disney", null, null);
+
+        assertEquals(3, books.size());
+        assertTrue(savedBooks.containsAll(books));
+    }
+
+    private List<Book> listPersistedBooks() {
         List<Book> userListWithParams = BookFactory.bookListWithSameParameters();
         List<Book> userList = BookFactory.bookList();
 
@@ -115,12 +160,29 @@ class BookRepositoryIntegrationTest {
             .flatMap(Collection::stream)
             .collect(Collectors.toList());
 
-        List<Book> savedBooks = bookRepository.saveAll(list);
+        return bookRepository.saveAll(list);
+    }
 
-        List<Book> books = bookRepository
-            .findByPublisherAndGenreAndYear("Walt Disney", "Adventure", "1988");
+    @TestFactory
+    @DisplayName("Should allow querying with different null parameters")
+    Stream<DynamicTest> should_be_allowed() {
+        List<Book> bookListWithParams = BookFactory.bookListWithSameParameters();
+        bookRepository.saveAll(bookListWithParams);
 
-        assertEquals(3, books.size());
-        assertTrue(savedBooks.containsAll(books));
+        return Stream.of(
+            bookRepository.findByOptionalPublisherAndGenreAndYear(
+                "Walt Disney", null, null),
+            bookRepository.findByOptionalPublisherAndGenreAndYear(
+                null, "Adventure", null),
+            bookRepository.findByOptionalPublisherAndGenreAndYear(
+                null, null, "1988"),
+            bookRepository.findByOptionalPublisherAndGenreAndYear(
+                "Walt Disney", null, "1988"),
+            bookRepository.findByOptionalPublisherAndGenreAndYear(
+                "Walt Disney", "Adventure", "1988")
+        )
+            .map(input -> DynamicTest.dynamicTest("Allowed: " + input,
+                () -> assertEquals(3, input.size()))
+            );
     }
 }

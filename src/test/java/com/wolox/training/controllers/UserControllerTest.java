@@ -11,7 +11,6 @@ import com.wolox.training.repositories.BookRepository;
 import com.wolox.training.repositories.UserRepository;
 import com.wolox.training.security.CustomAuthenticationProvider;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -315,14 +314,10 @@ class UserControllerTest {
     @Test
     @WithMockUser()
     void whenFindByParameters_ThenReturnListOfUsers() throws Exception {
-        List<User> users = UserFactory.userlistWithParams();
-        String startDate = "1915-02-21";
-        String endDate = "1926-07-10";
+        List<User> users = UserFactory.userlistWithSameParameters();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-        LocalDate start = LocalDate.parse(startDate, formatter);
-        LocalDate end = LocalDate.parse(endDate, formatter);
+        LocalDate start = LocalDate.of(1915, 2, 21);
+        LocalDate end = LocalDate.of(1926, 7, 10);
 
         Mockito.when(mockUserRepository.findByNameContainingIgnoreCaseAndBirthdateBetween("nando",
             start, end)).thenReturn(users);
@@ -335,26 +330,77 @@ class UserControllerTest {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.content().json(
-                "[\n"
-                    + "    {\n"
-                    + "        \"idUser\": null,\n"
-                    + "        \"username\": \"Xand\",\n"
-                    + "        \"name\": \"Fernando Andres\",\n"
-                    + "        \"birthdate\": \"1921-07-22\"\n"
-                    + "    },\n"
-                    + "    {\n"
-                    + "        \"idUser\": null,\n"
-                    + "        \"username\": \"Clow\",\n"
-                    + "        \"name\": \"Fernando Emilio\",\n"
-                    + "        \"birthdate\": \"1916-09-16\"\n"
-                    + "    },\n"
-                    + "    {\n"
-                    + "        \"idUser\": null,\n"
-                    + "        \"username\": \"Batist\",\n"
-                    + "        \"name\": \"Favio Fernando\",\n"
-                    + "        \"birthdate\": \"1923-06-28\"\n"
-                    + "    }\n"
-                    + "]"
+                JsonListUserWithSameParameters()
             ));
+    }
+
+    @Test
+    @WithMockUser
+    void whenFindByNameWithNullStarDateAndNullEndDate_ThenReturnListOfUsers() throws Exception {
+        List<User> users = UserFactory.userlistWithSameParameters();
+
+        Mockito.when(mockUserRepository.findByOptinalNameAndBirthdate("nando",
+            null, null)).thenReturn(users);
+
+        String url = ("/api/users/optional");
+
+        mvc.perform(MockMvcRequestBuilders.get(url)
+            .queryParam("name", "nando")
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding("utf-8"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.content().json(
+                JsonListUserWithSameParameters()
+            ));
+    }
+
+    @Test
+    @WithMockUser
+    void whenFindByStarDateEndDateWithNullName_ThenReturnListOfUsers() throws Exception {
+        List<User> users = UserFactory.userlistWithSameParameters();
+
+        LocalDate start = LocalDate.of(1915, 2, 21);
+        LocalDate end = LocalDate.of(1926, 7, 10);
+
+        Mockito.when(mockUserRepository.findByOptinalNameAndBirthdate(null,
+            start, end)).thenReturn(users);
+
+        String url = ("/api/users/optional");
+
+        mvc.perform(MockMvcRequestBuilders.get(url)
+            .queryParam("startDate", "1915-02-21")
+            .queryParam("endDate", "1926-07-10")
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding("utf-8"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.content().json(
+                JsonListUserWithSameParameters()
+            ));
+    }
+
+
+    private static String JsonListUserWithSameParameters() {
+        return "[\n"
+            + "    {\n"
+            + "        \"idUser\": null,\n"
+            + "        \"username\": \"Xand\",\n"
+            + "        \"name\": \"Fernando Andres\",\n"
+            + "        \"birthdate\": \"1921-07-22\"\n"
+            + "    },\n"
+            + "    {\n"
+            + "        \"idUser\": null,\n"
+            + "        \"username\": \"Clow\",\n"
+            + "        \"name\": \"Fernando Emilio\",\n"
+            + "        \"birthdate\": \"1916-09-16\"\n"
+            + "    },\n"
+            + "    {\n"
+            + "        \"idUser\": null,\n"
+            + "        \"username\": \"Batist\",\n"
+            + "        \"name\": \"Fabio Fernando\",\n"
+            + "        \"birthdate\": \"1923-06-28\"\n"
+            + "    }\n"
+            + "]";
     }
 }

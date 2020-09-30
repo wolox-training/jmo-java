@@ -13,7 +13,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -119,7 +122,7 @@ class UserRepositoryIntegrationTest {
     }
 
     private List<User> listPersistedUsers() {
-        List<User> userListWithParams = UserFactory.userlistWithParams();
+        List<User> userListWithParams = UserFactory.userlistWithSameParameters();
         List<User> userList = UserFactory.userList();
 
         List<User> list = Stream.of(userListWithParams, userList)
@@ -127,5 +130,29 @@ class UserRepositoryIntegrationTest {
             .collect(Collectors.toList());
 
         return userRepository.saveAll(list);
+    }
+
+    @TestFactory
+    @DisplayName("Should allow querying with different null parameters")
+    Stream<DynamicTest> should_be_allowed() {
+        List<User> userListWithParams = UserFactory.userlistWithSameParameters();
+        userRepository.saveAll(userListWithParams);
+
+        LocalDate startDate = LocalDate.of(1915, 2, 21);
+        LocalDate endDate = LocalDate.of(1925, 7, 10);
+
+        return Stream.of(
+            userRepository.findByOptinalNameAndBirthdate(
+                "%nando%", null, null),
+            userRepository.findByOptinalNameAndBirthdate(
+                null, startDate, endDate),
+            userRepository.findByOptinalNameAndBirthdate(
+                "%nando%", startDate, endDate),
+            userRepository.findByOptinalNameAndBirthdate(
+                "%nando%", startDate, null)
+        )
+            .map(input -> DynamicTest.dynamicTest("Allowed: " + input,
+                () -> assertEquals(3, input.size()))
+            );
     }
 }

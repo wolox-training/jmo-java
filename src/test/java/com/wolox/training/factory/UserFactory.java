@@ -34,7 +34,7 @@ public final class UserFactory {
         return Arrays.asList(user1, user2, user3);
     }
 
-    public static List<User> userlistWithParams() {
+    public static List<User> userlistWithSameParameters() {
         User user1 = new User();
         user1.setUsername("Xand");
         user1.setName("Fernando Andres");
@@ -49,7 +49,7 @@ public final class UserFactory {
 
         User user3 = new User();
         user3.setUsername("Batist");
-        user3.setName("Favio Fernando");
+        user3.setName("Fabio Fernando");
         user3.setBirthdate(LocalDate.of(1923, 6, 28));
         user3.setPassword("2cfeadf");
 

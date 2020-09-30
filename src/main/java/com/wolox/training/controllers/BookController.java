@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -81,6 +82,18 @@ public class BookController {
     public ResponseEntity<List<Book>> findByParameters(@PathVariable String publisher,
         @PathVariable String genre, @PathVariable String year) {
         List<Book> books = bookRepository.findByPublisherAndGenreAndYear(publisher, genre, year);
+        return ResponseEntity.ok(books);
+    }
+
+    @GetMapping(path = Route.OPTIONAL_PARAMS)
+    public ResponseEntity<List<Book>> findByOptionalParameters(
+        @RequestParam(name = "publisher", required = false) String publisher,
+        @RequestParam(name = "genre", required = false) String genre,
+        @RequestParam(name = "year", required = false) String year) {
+
+        List<Book> books = bookRepository
+            .findByOptionalPublisherAndGenreAndYear(publisher, genre, year);
+
         return ResponseEntity.ok(books);
     }
 

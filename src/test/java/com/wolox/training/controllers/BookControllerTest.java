@@ -270,45 +270,112 @@ class BookControllerTest {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.content().json(
-                "[\n"
-                    + "    {\n"
-                    + "        \"idBook\": null,\n"
-                    + "        \"genre\": \"Adventure\",\n"
-                    + "        \"author\": \"John Lasseter\",\n"
-                    + "        \"image\": \"Buddy.png\",\n"
-                    + "        \"title\": \"Toy Story\",\n"
-                    + "        \"subtitle\": \"-\",\n"
-                    + "        \"publisher\": \"Walt Disney\",\n"
-                    + "        \"year\": \"1988\",\n"
-                    + "        \"pages\": 392,\n"
-                    + "        \"isbn\": \"8472821\"\n"
-                    + "    },\n"
-                    + "    {\n"
-                    + "        \"idBook\": null,\n"
-                    + "        \"genre\": \"Adventure\",\n"
-                    + "        \"author\": \"Don Hahn\",\n"
-                    + "        \"image\": \"Lion-King.png\",\n"
-                    + "        \"title\": \"The Lion King\",\n"
-                    + "        \"subtitle\": \"-\",\n"
-                    + "        \"publisher\": \"Walt Disney\",\n"
-                    + "        \"year\": \"1988\",\n"
-                    + "        \"pages\": 98,\n"
-                    + "        \"isbn\": \"1234701\"\n"
-                    + "    },\n"
-                    + "    {\n"
-                    + "        \"idBook\": null,\n"
-                    + "        \"genre\": \"Adventure\",\n"
-                    + "        \"author\": \"John Musker\",\n"
-                    + "        \"image\": \"SadMoana.png\",\n"
-                    + "        \"title\": \"Moana\",\n"
-                    + "        \"subtitle\": \"-\",\n"
-                    + "        \"publisher\": \"Walt Disney\",\n"
-                    + "        \"year\": \"1988\",\n"
-                    + "        \"pages\": 142,\n"
-                    + "        \"isbn\": \"986273645\"\n"
-                    + "    }\n"
-                    + "]"
+                JsonBookListWithSameParameters()
             ));
+    }
+
+    @Test
+    @WithMockUser()
+    void whenFindByPublisherWithNullGenreAndNullYear_ThenReturnListOfBooks() throws Exception {
+        List<Book> books = BookFactory.bookListWithSameParameters();
+
+        Mockito.when(mockBookRepository.findByOptionalPublisherAndGenreAndYear("Walt Disney",
+            null, null)).thenReturn(books);
+
+        String url = ("/api/books/optional");
+
+        mvc.perform(MockMvcRequestBuilders.get(url)
+            .contentType(MediaType.APPLICATION_JSON)
+            .queryParam("publisher", "Walt Disney")
+            .characterEncoding("utf-8"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.content().json(
+                JsonBookListWithSameParameters()
+            ));
+    }
+
+    @Test
+    @WithMockUser()
+    void whenFindByGenreAndNullPublisherAndNullYear_ThenReturnListOfBooks() throws Exception {
+        List<Book> books = BookFactory.bookListWithSameParameters();
+
+        Mockito.when(mockBookRepository.findByOptionalPublisherAndGenreAndYear(null,
+            "Adventure", null)).thenReturn(books);
+
+        String url = ("/api/books/optional");
+
+        mvc.perform(MockMvcRequestBuilders.get(url)
+            .contentType(MediaType.APPLICATION_JSON)
+            .queryParam("genre", "Adventure")
+            .characterEncoding("utf-8"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.content().json(
+                JsonBookListWithSameParameters()
+            ));
+    }
+
+    @Test
+    @WithMockUser()
+    void whenFindByYearWithNullPublisherAndNullGenre_ThenReturnListOfBooks() throws Exception {
+        List<Book> books = BookFactory.bookListWithSameParameters();
+
+        Mockito.when(mockBookRepository.findByOptionalPublisherAndGenreAndYear(null,
+            null, "1988")).thenReturn(books);
+
+        String url = ("/api/books/optional");
+
+        mvc.perform(MockMvcRequestBuilders.get(url)
+            .contentType(MediaType.APPLICATION_JSON)
+            .queryParam("year", "1988")
+            .characterEncoding("utf-8"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.content().json(
+                JsonBookListWithSameParameters()
+            ));
+    }
+
+    private static String JsonBookListWithSameParameters() {
+        return "[\n"
+            + "    {\n"
+            + "        \"idBook\": null,\n"
+            + "        \"genre\": \"Adventure\",\n"
+            + "        \"author\": \"John Lasseter\",\n"
+            + "        \"image\": \"Buddy.png\",\n"
+            + "        \"title\": \"Toy Story\",\n"
+            + "        \"subtitle\": \"-\",\n"
+            + "        \"publisher\": \"Walt Disney\",\n"
+            + "        \"year\": \"1988\",\n"
+            + "        \"pages\": 392,\n"
+            + "        \"isbn\": \"8472821\"\n"
+            + "    },\n"
+            + "    {\n"
+            + "        \"idBook\": null,\n"
+            + "        \"genre\": \"Adventure\",\n"
+            + "        \"author\": \"Don Hahn\",\n"
+            + "        \"image\": \"Lion-King.png\",\n"
+            + "        \"title\": \"The Lion King\",\n"
+            + "        \"subtitle\": \"-\",\n"
+            + "        \"publisher\": \"Walt Disney\",\n"
+            + "        \"year\": \"1988\",\n"
+            + "        \"pages\": 98,\n"
+            + "        \"isbn\": \"1234701\"\n"
+            + "    },\n"
+            + "    {\n"
+            + "        \"idBook\": null,\n"
+            + "        \"genre\": \"Adventure\",\n"
+            + "        \"author\": \"John Musker\",\n"
+            + "        \"image\": \"SadMoana.png\",\n"
+            + "        \"title\": \"Moana\",\n"
+            + "        \"subtitle\": \"-\",\n"
+            + "        \"publisher\": \"Walt Disney\",\n"
+            + "        \"year\": \"1988\",\n"
+            + "        \"pages\": 142,\n"
+            + "        \"isbn\": \"986273645\"\n"
+            + "    }\n"
+            + "]";
     }
 
 }
