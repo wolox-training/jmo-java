@@ -136,7 +136,8 @@ public class UserController {
         LocalDate start = LocalDate.parse(startDate, formatter);
         LocalDate end = LocalDate.parse(endDate, formatter);
 
-        List<User> users = userRepository.findByNameContainingIgnoreCaseAndBirthdateBetween(name, start, end);
+        List<User> users = userRepository
+            .findByNameContainingIgnoreCaseAndBirthdateBetween(name, start, end);
         return ResponseEntity.ok(users);
     }
 }

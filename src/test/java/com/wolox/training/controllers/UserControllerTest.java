@@ -33,7 +33,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
-class   UserControllerTest {
+class UserControllerTest {
 
     @Autowired
     private MockMvc mvc;

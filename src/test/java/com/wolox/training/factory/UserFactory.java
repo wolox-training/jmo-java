@@ -43,13 +43,13 @@ public final class UserFactory {
 
         User user2 = new User();
         user2.setUsername("Clow");
-        user2.  setName("Fernando Emilio");
+        user2.setName("Fernando Emilio");
         user2.setBirthdate(LocalDate.of(1916, 9, 16));
         user2.setPassword("anit");
 
         User user3 = new User();
         user3.setUsername("Batist");
-            user3.setName("Favio Fernando");
+        user3.setName("Favio Fernando");
         user3.setBirthdate(LocalDate.of(1923, 6, 28));
         user3.setPassword("2cfeadf");
 

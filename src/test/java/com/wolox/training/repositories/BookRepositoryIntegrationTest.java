@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.wolox.training.factory.BookFactory;
 import com.wolox.training.factory.UserFactory;
 import com.wolox.training.model.Book;
-import com.wolox.training.model.User;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -119,7 +118,7 @@ class BookRepositoryIntegrationTest {
         List<Book> savedBooks = bookRepository.saveAll(userList);
 
         List<Book> books = bookRepository
-            .findByPublisherAndGenreAndYear("Walt Disney","Adventure", "1988");
+            .findByPublisherAndGenreAndYear("Walt Disney", "Adventure", "1988");
 
         assertEquals(3, savedBooks.size());
         assertTrue(savedBooks.containsAll(books));

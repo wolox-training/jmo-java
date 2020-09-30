@@ -16,6 +16,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findByNameContainingIgnoreCaseAndBirthdateBetween(String name, LocalDate startDate,
         LocalDate endDate);
-
-    List<User> findByNameContainingIgnoreCase(String name);
 }
