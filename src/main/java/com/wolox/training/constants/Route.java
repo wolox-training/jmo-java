@@ -4,7 +4,7 @@ import org.springframework.jmx.access.InvalidInvocationException;
 
 public final class Route {
 
-    private Route(){
+    private Route() {
         throw new InvalidInvocationException(Message.INVALID_INVOCATION);
     }
 

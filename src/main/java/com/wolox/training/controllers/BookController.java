@@ -41,7 +41,7 @@ public class BookController {
     @PutMapping
     public void updateBook(@RequestBody Book book) {
         if (!bookRepository.findById(book.getIdBook()).isPresent()) {
-                throw new BookNotFoundException(Message.BOOK_NOT_FOUND);
+            throw new BookNotFoundException(Message.BOOK_NOT_FOUND);
         }
         bookRepository.save(book);
     }

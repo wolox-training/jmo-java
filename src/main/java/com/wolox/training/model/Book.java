@@ -40,7 +40,8 @@ public final class Book {
     }
 
     public Book(Long idBook, String genre, String author, String image, String title,
-        String subtitle, String publisher, String year, Integer pages, String isbn, List<User> users) {
+        String subtitle, String publisher, String year, Integer pages, String isbn,
+        List<User> users) {
         this.idBook = idBook;
         this.genre = genre;
         this.author = author;
