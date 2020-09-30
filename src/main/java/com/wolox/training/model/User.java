@@ -1,5 +1,6 @@
 package com.wolox.training.model;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -55,12 +56,13 @@ public final class User {
     }
 
     public void setBooks(List<Book> books) {
-        checkNotNull(books, "Books are not  should nulls");
+        checkNotNull(books, "Books are not should nulls");
         this.books = books;
     }
 
     public void setPassword(String password) {
-        checkNotNull(password, "Password are not  should nulls");
+        checkNotNull(password, "Password is not should nulls");
+        checkArgument(password.equals(""), "Password is not should empty");
         this.password = password;
     }
 
