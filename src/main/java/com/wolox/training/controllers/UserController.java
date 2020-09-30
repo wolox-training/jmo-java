@@ -21,7 +21,6 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -137,7 +136,7 @@ public class UserController {
         LocalDate start = LocalDate.parse(startDate, formatter);
         LocalDate end = LocalDate.parse(endDate, formatter);
 
-        List<User> users = userRepository.findyByParameters(name, start, end);
+        List<User> users = userRepository.findByNameContainingIgnoreCaseAndBirthdateBetween(name, start, end);
         return ResponseEntity.ok(users);
     }
 }

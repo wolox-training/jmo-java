@@ -15,13 +15,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     Optional<Book> findByIsbn(String isbn);
 
-    @Query("select b from Book b " +
-        "where b.publisher = :publisher " +
-        "and b.genre = :genre " +
-        "and b.year = :year ")
-    List<Book> findyByParameters(
-        @Param("publisher") String publisher,
-        @Param("genre") String genre,
-        @Param("year") String year);
+    List<Book> findByPublisherAndGenreAndYear(String publisher, String genre, String year);
 
 }

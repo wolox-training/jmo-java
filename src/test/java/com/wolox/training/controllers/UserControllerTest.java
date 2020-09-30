@@ -324,7 +324,7 @@ class   UserControllerTest {
         LocalDate start = LocalDate.parse(startDate, formatter);
         LocalDate end = LocalDate.parse(endDate, formatter);
 
-        Mockito.when(mockUserRepository.findyByParameters("nando",
+        Mockito.when(mockUserRepository.findByNameContainingIgnoreCaseAndBirthdateBetween("nando",
             start, end)).thenReturn(users);
 
         String url = ("/api/users/nando/1915-02-21/1926-07-10");

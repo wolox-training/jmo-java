@@ -259,7 +259,7 @@ class BookControllerTest {
     void whenFindByParameters_ThenReturnListOfBooks() throws Exception {
         List<Book> books = BookFactory.bookListWithSameParameters();
 
-        Mockito.when(mockBookRepository.findyByParameters("Walt Disney",
+        Mockito.when(mockBookRepository.findByPublisherAndGenreAndYear("Walt Disney",
             "Adventure", "1988")).thenReturn(books);
 
         String url = ("/api/books/Walt Disney/Adventure/1988");

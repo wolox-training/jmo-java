@@ -97,7 +97,7 @@ class UserRepositoryIntegrationTest {
         LocalDate startDate = LocalDate.of(1915, 2, 21);
         LocalDate endDate = LocalDate.of(1925, 7, 10);
 
-        List<User> users = userRepository.findyByParameters("%nando%",
+        List<User> users = userRepository.findByNameContainingIgnoreCaseAndBirthdateBetween("nando",
             startDate, endDate);
 
         assertEquals(3, users.size());
@@ -111,7 +111,7 @@ class UserRepositoryIntegrationTest {
         LocalDate startDate = LocalDate.of(1915, 2, 21);
         LocalDate endDate = LocalDate.of(1925, 7, 10);
 
-        List<User> users = userRepository.findyByParameters("%NaNDo%",
+        List<User> users = userRepository.findByNameContainingIgnoreCaseAndBirthdateBetween("NaNDo",
             startDate, endDate);
 
         assertEquals(3, users.size());

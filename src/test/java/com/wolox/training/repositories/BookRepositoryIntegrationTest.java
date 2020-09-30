@@ -119,7 +119,7 @@ class BookRepositoryIntegrationTest {
         List<Book> savedBooks = bookRepository.saveAll(userList);
 
         List<Book> books = bookRepository
-            .findyByParameters("Walt Disney","Adventure", "1988");
+            .findByPublisherAndGenreAndYear("Walt Disney","Adventure", "1988");
 
         assertEquals(3, savedBooks.size());
         assertTrue(savedBooks.containsAll(books));

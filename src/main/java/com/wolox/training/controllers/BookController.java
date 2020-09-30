@@ -80,7 +80,7 @@ public class BookController {
     @GetMapping(path = Route.BOOK_PARAMS)
     public ResponseEntity<List<Book>> findByParameters(@PathVariable String publisher,
         @PathVariable String genre, @PathVariable String year) {
-        List<Book> books = bookRepository.findyByParameters(publisher, genre, year);
+        List<Book> books = bookRepository.findByPublisherAndGenreAndYear(publisher, genre, year);
         return ResponseEntity.ok(books);
     }
 
