@@ -1,5 +1,7 @@
 package com.wolox.training.controllers;
 
+import static com.wolox.training.constants.Constants.UTF_8;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wolox.training.factory.BookFactory;
 import com.wolox.training.model.Book;
@@ -50,22 +52,12 @@ class BookControllerTest {
         Mockito.when(mockBookRepository.findById(1L)).thenReturn(Optional.of(book));
         String url = ("/api/books/1");
         mvc.perform(MockMvcRequestBuilders.get(url)
-            .contentType(MediaType.APPLICATION_JSON))
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding(UTF_8))
             .andExpect(MockMvcResultMatchers.status().isOk())
-            .andExpect(MockMvcResultMatchers.content().json(
-                "{\n"
-                    + "    \"idBook\": null,"
-                    + "    \"genre\": \"Fantasy\","
-                    + "    \"author\": \"J. K. Rowlingn\","
-                    + "    \"image\" : \"image.png\","
-                    + "    \"title\": \"Harry Potter\","
-                    + "    \"subtitle\" : \"-\","
-                    + "    \"publisher\" :  \"Bloomsbury\","
-                    + "    \"year\" : \"1997\","
-                    + "    \"pages\" : 223,"
-                    + "    \"isbn\" : \"6453723453\""
-                    + "}"
-            ));
+            .andExpect(MockMvcResultMatchers.content()
+                .json(jsonBookWithDefaultData())
+            );
     }
 
     @Test
@@ -126,23 +118,28 @@ class BookControllerTest {
         Mockito.when(mockBookRepository.save(defaultBook)).thenReturn(book);
         mvc.perform(MockMvcRequestBuilders.post(url)
             .content(objectMapper.writeValueAsString(defaultBook))
-            .contentType(MediaType.APPLICATION_JSON))
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding(UTF_8))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.content().json(
-                "{\n"
-                    + "    \"idBook\": null,\n"
-                    + "    \"genre\": \"Fantasy\",\n"
-                    + "    \"author\": \"J. K. Rowlingn\",\n"
-                    + "    \"image\" : \"image.png\",\n"
-                    + "    \"title\": \"Harry Potter\",\n"
-                    + "    \"subtitle\" : \"-\",\n"
-                    + "    \"publisher\" :  \"Bloomsbury\",\n"
-                    + "    \"year\" : \"1997\",\n"
-                    + "    \"pages\" : 223,\n"
-                    + "    \"isbn\" : \"6453723453\"\n"
-                    + "}"
+                jsonBookWithDefaultData()
             ));
+    }
+
+    private String jsonBookWithDefaultData() {
+        return "{\n"
+            + "    \"idBook\": null,"
+            + "    \"genre\": \"Fantasy\","
+            + "    \"author\": \"J. K. Rowlingn\","
+            + "    \"image\" : \"image.png\","
+            + "    \"title\": \"Harry Potter\","
+            + "    \"subtitle\" : \"-\","
+            + "    \"publisher\" :  \"Bloomsbury\","
+            + "    \"year\" : \"1997\","
+            + "    \"pages\" : 223,"
+            + "    \"isbn\" : \"6453723453\""
+            + "}";
     }
 
     @Test
@@ -155,7 +152,7 @@ class BookControllerTest {
         mvc.perform(MockMvcRequestBuilders.put(url)
             .content(objectMapper.writeValueAsString(book))
             .contentType(MediaType.APPLICATION_JSON)
-            .characterEncoding("utf-8"))
+            .characterEncoding(UTF_8))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -168,7 +165,7 @@ class BookControllerTest {
         mvc.perform(MockMvcRequestBuilders.put(url)
             .content(objectMapper.writeValueAsString(book))
             .contentType(MediaType.APPLICATION_JSON)
-            .characterEncoding("utf-8"))
+            .characterEncoding(UTF_8))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
@@ -181,7 +178,7 @@ class BookControllerTest {
         Mockito.doNothing().when(mockBookRepository).deleteById(book.getIdBook());
         mvc.perform(MockMvcRequestBuilders.delete(url)
             .contentType(MediaType.APPLICATION_JSON)
-            .characterEncoding("utf-8"))
+            .characterEncoding(UTF_8))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -194,7 +191,7 @@ class BookControllerTest {
         Mockito.doNothing().when(mockBookRepository).deleteById(book.getIdBook());
         mvc.perform(MockMvcRequestBuilders.delete(url)
             .contentType(MediaType.APPLICATION_JSON)
-            .characterEncoding("utf-8"))
+            .characterEncoding(UTF_8))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
@@ -206,19 +203,24 @@ class BookControllerTest {
         Mockito.when(mockBookRepository.findByIsbn("0385472579")).thenReturn(Optional.of(book));
         String url = ("/api/books/findIsbn/0385472579");
         mvc.perform(MockMvcRequestBuilders.get(url)
-            .contentType(MediaType.APPLICATION_JSON))
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding(UTF_8))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.content().json(
-                "{\n"
-                    + "    \"title\": \"Harry Potter\","
-                    + "    \"subtitle\" : \"-\","
-                    + "    \"publishers\" :  \"Bloomsbury\","
-                    + "    \"authors\": \"J. K. Rowlingn\","
-                    + "    \"publish_date\" : \"1997\","
-                    + "    \"number_of_pages\" : 223,"
-                    + "    \"isbn_10\" : \"6453723453\""
-                    + "}"
+                jsonBookExternalApi()
             ));
+    }
+
+    private String jsonBookExternalApi() {
+        return "{\n"
+            + "    \"title\": \"Harry Potter\","
+            + "    \"subtitle\" : \"-\","
+            + "    \"publishers\" :  \"Bloomsbury\","
+            + "    \"authors\": \"J. K. Rowlingn\","
+            + "    \"publish_date\" : \"1997\","
+            + "    \"number_of_pages\" : 223,"
+            + "    \"isbn_10\" : \"6453723453\""
+            + "}";
     }
 
     @Test
@@ -229,18 +231,11 @@ class BookControllerTest {
         Mockito.when(mockBookRepository.save(Mockito.any())).thenReturn(book);
         String url = ("/api/books/findIsbn/0385472579");
         mvc.perform(MockMvcRequestBuilders.get(url)
-            .contentType(MediaType.APPLICATION_JSON))
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding(UTF_8))
             .andExpect(MockMvcResultMatchers.status().isCreated())
             .andExpect(MockMvcResultMatchers.content().json(
-                "{\n"
-                    + "    \"title\": \"Harry Potter\","
-                    + "    \"subtitle\" : \"-\","
-                    + "    \"publishers\" :  \"Bloomsbury\","
-                    + "    \"authors\": \"J. K. Rowlingn\","
-                    + "    \"publish_date\" : \"1997\","
-                    + "    \"number_of_pages\" : 223,"
-                    + "    \"isbn_10\" : \"6453723453\""
-                    + "}"
+                jsonBookExternalApi()
             ));
     }
 
@@ -250,8 +245,11 @@ class BookControllerTest {
         Mockito.when(mockBookRepository.findByIsbn("1")).thenReturn(Optional.empty());
         String url = ("/api/books/findIsbn/1");
         mvc.perform(MockMvcRequestBuilders.get(url)
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(MockMvcResultMatchers.status().isNotFound());
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding(UTF_8))
+            .andExpect(MockMvcResultMatchers.status()
+                .isNotFound()
+            );
     }
 
     @Test
@@ -266,7 +264,7 @@ class BookControllerTest {
 
         mvc.perform(MockMvcRequestBuilders.get(url)
             .contentType(MediaType.APPLICATION_JSON)
-            .characterEncoding("utf-8"))
+            .characterEncoding(UTF_8))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.content().json(
