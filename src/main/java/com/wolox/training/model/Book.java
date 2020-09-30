@@ -3,15 +3,11 @@ package com.wolox.training.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -44,7 +40,8 @@ public final class Book {
     }
 
     public Book(Long idBook, String genre, String author, String image, String title,
-        String subtitle, String publisher, String year, Integer pages, String isbn, List<User> users) {
+        String subtitle, String publisher, String year, Integer pages, String isbn,
+        List<User> users) {
         this.idBook = idBook;
         this.genre = genre;
         this.author = author;
