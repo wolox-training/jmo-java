@@ -1,5 +1,7 @@
 package com.wolox.training.controllers;
 
+import static com.wolox.training.constants.Constants.UTF_8;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -56,15 +58,11 @@ class UserControllerTest {
         Mockito.when(mockUserRepository.findById(1L)).thenReturn(Optional.of(user));
         String url = ("/api/users/1");
         mvc.perform(MockMvcRequestBuilders.get(url)
-            .contentType(MediaType.APPLICATION_JSON))
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding(UTF_8))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.content().json(
-                "{\n"
-                    + "    \"idUser\": null,\n"
-                    + "    \"username\": \"Kevv\",\n"
-                    + "    \"name\": \"Kevin\",\n"
-                    + "    \"birthdate\": \"1994-05-02\"\n"
-                    + "}"
+                jsonUserWithDefaultData()
             ));
     }
 
@@ -74,7 +72,8 @@ class UserControllerTest {
         List<User> users = UserFactory.userList();
         Mockito.when(mockUserRepository.findAll()).thenReturn(users);
         mvc.perform(MockMvcRequestBuilders.get(url)
-            .contentType(MediaType.APPLICATION_JSON))
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding(UTF_8))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.content().json(
                 "[\n"
@@ -109,17 +108,21 @@ class UserControllerTest {
         mvc.perform(MockMvcRequestBuilders.post(url)
             .content(objectMapper.writeValueAsString(defaultUser))
             .contentType(MediaType.APPLICATION_JSON)
-            .characterEncoding("utf-8"))
+            .characterEncoding(UTF_8))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.content().json(
-                "{\n"
-                    + "    \"idUser\": null,\n"
-                    + "    \"username\": \"Kevv\",\n"
-                    + "    \"name\": \"Kevin\",\n"
-                    + "    \"birthdate\": \"1994-05-02\"\n"
-                    + "}"
+                jsonUserWithDefaultData()
             ));
+    }
+
+    private static String jsonUserWithDefaultData() {
+        return "{\n"
+            + "    \"idUser\": null,\n"
+            + "    \"username\": \"Kevv\",\n"
+            + "    \"name\": \"Kevin\",\n"
+            + "    \"birthdate\": \"1994-05-02\"\n"
+            + "}";
     }
 
     @Test
@@ -132,7 +135,7 @@ class UserControllerTest {
         mvc.perform(MockMvcRequestBuilders.put(url)
             .content(objectMapper.writeValueAsString(user))
             .contentType(MediaType.APPLICATION_JSON)
-            .characterEncoding("utf-8"))
+            .characterEncoding(UTF_8))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -145,7 +148,7 @@ class UserControllerTest {
         mvc.perform(MockMvcRequestBuilders.put(url)
             .content(objectMapper.writeValueAsString(user))
             .contentType(MediaType.APPLICATION_JSON)
-            .characterEncoding("utf-8"))
+            .characterEncoding(UTF_8))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
@@ -158,7 +161,7 @@ class UserControllerTest {
 
         mvc.perform(MockMvcRequestBuilders.delete(url)
             .contentType(MediaType.APPLICATION_JSON)
-            .characterEncoding("utf-8"))
+            .characterEncoding(UTF_8))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -171,7 +174,7 @@ class UserControllerTest {
 
         mvc.perform(MockMvcRequestBuilders.delete(url)
             .contentType(MediaType.APPLICATION_JSON)
-            .characterEncoding("utf-8"))
+            .characterEncoding(UTF_8))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
@@ -192,7 +195,7 @@ class UserControllerTest {
         mvc.perform(MockMvcRequestBuilders.put(url)
             .content(objectMapper.writeValueAsString(defaultUser))
             .contentType(MediaType.APPLICATION_JSON)
-            .characterEncoding("utf-8"))
+            .characterEncoding(UTF_8))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -205,7 +208,7 @@ class UserControllerTest {
         mvc.perform(MockMvcRequestBuilders.put(url)
             .content(objectMapper.writeValueAsString(user))
             .contentType(MediaType.APPLICATION_JSON)
-            .characterEncoding("utf-8"))
+            .characterEncoding(UTF_8))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
@@ -219,7 +222,7 @@ class UserControllerTest {
         mvc.perform(MockMvcRequestBuilders.put(url)
             .content(objectMapper.writeValueAsString(user))
             .contentType(MediaType.APPLICATION_JSON)
-            .characterEncoding("utf-8"))
+            .characterEncoding(UTF_8))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
@@ -243,7 +246,7 @@ class UserControllerTest {
         mvc.perform(MockMvcRequestBuilders.put(url)
             .content(objectMapper.writeValueAsString(defaultUser))
             .contentType(MediaType.APPLICATION_JSON)
-            .characterEncoding("utf-8"))
+            .characterEncoding(UTF_8))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -256,7 +259,7 @@ class UserControllerTest {
         mvc.perform(MockMvcRequestBuilders.put(url)
             .content(objectMapper.writeValueAsString(user))
             .contentType(MediaType.APPLICATION_JSON)
-            .characterEncoding("utf-8"))
+            .characterEncoding(UTF_8))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
@@ -270,7 +273,7 @@ class UserControllerTest {
         mvc.perform(MockMvcRequestBuilders.put(url)
             .content(objectMapper.writeValueAsString(user))
             .contentType(MediaType.APPLICATION_JSON)
-            .characterEncoding("utf-8"))
+            .characterEncoding(UTF_8))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
