@@ -25,4 +25,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
         @Param("name") String name,
         @Param("startDate") LocalDate startDate,
         @Param("endDate") LocalDate endDate);
+
+    @Query("select u from Usser u " +
+        "where (:username is null or u.username = :username) " +
+        "and (:name is null or u.name = :name) " +
+        "and (:birthdate is null or u.birthdate = birthdate) ")
+    List<User> getAll(
+        @Param("username") String username,
+        @Param("name") String name,
+        @Param("birthdate") LocalDate birthdate);
 }

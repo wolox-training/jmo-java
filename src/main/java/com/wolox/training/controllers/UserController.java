@@ -147,4 +147,15 @@ public class UserController {
             .findByOptinalNameAndBirthdate(name, startDate, endDate);
         return ResponseEntity.ok(users);
     }
+
+    @GetMapping(path = Route.ALL_OPTIONAL_PARAMS)
+    public ResponseEntity<List<User>> getAll(
+        @RequestParam(name = "username", required = false) String username,
+        @RequestParam(name = "name", required = false) String name,
+        @RequestParam(name = "birthdate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate birthdate) {
+
+        List<User> users = userRepository
+            .getAll(username, name, birthdate);
+        return ResponseEntity.ok(users);
+    }
 }

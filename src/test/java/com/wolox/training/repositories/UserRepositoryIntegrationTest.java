@@ -155,4 +155,29 @@ class UserRepositoryIntegrationTest {
                 () -> assertEquals(3, input.size()))
             );
     }
+
+    @TestFactory
+    @DisplayName("Should allow querying with different null parameters")
+    Stream<DynamicTest> should_be_allowed_with_optional_parameters() {
+        List<User> userListWithParams = UserFactory.userlistWithSameParameters();
+        userRepository.saveAll(userListWithParams);
+
+        LocalDate birthdate = LocalDate.of(1915, 2, 21);
+
+        return Stream.of(
+            userRepository.getAll(null, "Fernando Emilio",
+                birthdate),
+            userRepository.getAll("Clow", null,
+                birthdate),
+            userRepository.getAll("Clow", "Fernando Emilio",
+                null),
+            userRepository.getAll(null, "Fernando Emilio",
+                null),
+            userRepository.getAll("Clow", null,
+                null)
+        )
+            .map(input -> DynamicTest.dynamicTest("Allowed: " + input,
+                () -> assertEquals(1, input.size()))
+            );
+    }
 }

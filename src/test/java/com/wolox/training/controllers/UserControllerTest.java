@@ -14,6 +14,7 @@ import com.wolox.training.repositories.UserRepository;
 import com.wolox.training.security.CustomAuthenticationProvider;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -383,7 +384,6 @@ class UserControllerTest {
             ));
     }
 
-
     private static String JsonListUserWithSameParameters() {
         return "[\n"
             + "    {\n"
@@ -405,5 +405,31 @@ class UserControllerTest {
             + "        \"birthdate\": \"1923-06-28\"\n"
             + "    }\n"
             + "]";
+    }
+
+    @Test
+    @WithMockUser
+    void whenFindUsersByUsername_ThenReturnListOfUsers() throws Exception {
+        List<User> users = UserFactory.userlistWithSameParameters();
+
+        Mockito.when(mockUserRepository.getAll("Clow",
+            null, null)).thenReturn(Arrays.asList(users.get(1)));
+
+        String url = ("/api/users/all");
+
+        mvc.perform(MockMvcRequestBuilders.get(url)
+            .queryParam("username", "Clow")
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding("utf-8"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.content().json(
+                "[{\n"
+                    + "        \"idUser\": null,\n"
+                    + "        \"username\": \"Clow\",\n"
+                    + "        \"name\": \"Fernando Emilio\",\n"
+                    + "        \"birthdate\": \"1916-09-16\"\n"
+                    + "    }]\n"
+            ));
     }
 }
