@@ -20,6 +20,8 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
@@ -28,6 +30,8 @@ class UserRepositoryIntegrationTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    private final Pageable pageable = Pageable.unpaged();
 
     private final User user = UserFactory.withDefaultData();
 
@@ -51,9 +55,9 @@ class UserRepositoryIntegrationTest {
         List<User> usersList = UserFactory.userList();
         List<User> savedUser = userRepository.saveAll(usersList);
 
-        List<User> users = userRepository.findAll();
+        Page<User> users = userRepository.findAll(pageable);
 
-        assertTrue(savedUser.containsAll(users));
+        assertTrue(savedUser.containsAll(users.getContent()));
     }
 
     @Test
@@ -100,11 +104,11 @@ class UserRepositoryIntegrationTest {
         LocalDate startDate = LocalDate.of(1915, 2, 21);
         LocalDate endDate = LocalDate.of(1925, 7, 10);
 
-        List<User> users = userRepository.findByNameContainingIgnoreCaseAndBirthdateBetween("nando",
-            startDate, endDate);
+        Page<User> users = userRepository.findByNameContainingIgnoreCaseAndBirthdateBetween("nando",
+            startDate, endDate, pageable);
 
-        assertEquals(3, users.size());
-        assertTrue(savedUsers.containsAll(users));
+        assertEquals(3, users.getContent().size());
+        assertTrue(savedUsers.containsAll(users.getContent()));
     }
 
     @Test
@@ -114,11 +118,11 @@ class UserRepositoryIntegrationTest {
         LocalDate startDate = LocalDate.of(1915, 2, 21);
         LocalDate endDate = LocalDate.of(1925, 7, 10);
 
-        List<User> users = userRepository.findByNameContainingIgnoreCaseAndBirthdateBetween("NaNDo",
-            startDate, endDate);
+        Page<User> users = userRepository.findByNameContainingIgnoreCaseAndBirthdateBetween("NaNDo",
+            startDate, endDate, pageable);
 
-        assertEquals(3, users.size());
-        assertTrue(savedUsers.containsAll(users));
+        assertEquals(3, users.getContent().size());
+        assertTrue(savedUsers.containsAll(users.getContent()));
     }
 
     private List<User> listPersistedUsers() {
@@ -143,16 +147,16 @@ class UserRepositoryIntegrationTest {
 
         return Stream.of(
             userRepository.findByOptinalNameAndBirthdate(
-                "%nando%", null, null),
+                "%nando%", null, null, pageable),
             userRepository.findByOptinalNameAndBirthdate(
-                null, startDate, endDate),
+                null, startDate, endDate, pageable),
             userRepository.findByOptinalNameAndBirthdate(
-                "%nando%", startDate, endDate),
+                "%nando%", startDate, endDate, pageable),
             userRepository.findByOptinalNameAndBirthdate(
-                "%nando%", startDate, null)
+                "%nando%", startDate, null, pageable)
         )
             .map(input -> DynamicTest.dynamicTest("Allowed: " + input,
-                () -> assertEquals(3, input.size()))
+                () -> assertEquals(3, input.getContent().size()))
             );
     }
 
@@ -166,18 +170,18 @@ class UserRepositoryIntegrationTest {
 
         return Stream.of(
             userRepository.getAll(null, "Fernando Emilio",
-                birthdate),
+                birthdate, pageable),
             userRepository.getAll("Clow", null,
-                birthdate),
+                birthdate, pageable),
             userRepository.getAll("Clow", "Fernando Emilio",
-                null),
+                null, pageable),
             userRepository.getAll(null, "Fernando Emilio",
-                null),
+                null, pageable),
             userRepository.getAll("Clow", null,
-                null)
+                null, pageable)
         )
             .map(input -> DynamicTest.dynamicTest("Allowed: " + input,
-                () -> assertEquals(1, input.size()))
+                () -> assertEquals(1, input.getContent().size()))
             );
     }
 }

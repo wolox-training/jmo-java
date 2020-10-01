@@ -19,6 +19,8 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
@@ -27,6 +29,8 @@ class BookRepositoryIntegrationTest {
 
     @Autowired
     private BookRepository bookRepository;
+
+    private final Pageable pageable = Pageable.unpaged();
 
     private final Book book = BookFactory.withDefaultData();
 
@@ -50,9 +54,9 @@ class BookRepositoryIntegrationTest {
         List<Book> bookList = BookFactory.bookList();
         List<Book> savedBooks = bookRepository.saveAll(bookList);
 
-        List<Book> books = bookRepository.findAll();
+        Page<Book> books = bookRepository.findAll(pageable);
 
-        assertTrue(savedBooks.containsAll(books));
+        assertTrue(savedBooks.containsAll(books.getContent()));
     }
 
     @Test
@@ -112,44 +116,44 @@ class BookRepositoryIntegrationTest {
     void whenFindByPublisherAndGenreAndYear_ThenReturnListOfBooks() {
         List<Book> savedBooks = listPersistedBooks();
 
-        List<Book> books = bookRepository
-            .findByPublisherAndGenreAndYear("Walt Disney", "Adventure", "1988");
+        Page<Book> books = bookRepository
+            .findByPublisherAndGenreAndYear("Walt Disney", "Adventure", "1988", pageable);
 
-        assertEquals(3, books.size());
-        assertTrue(savedBooks.containsAll(books));
+        assertEquals(3, books.getContent().size());
+        assertTrue(savedBooks.containsAll(books.getContent()));
     }
 
     @Test
     void whenFindByPublisherAndNullGenreAndNullYear_ThenReturnListOfBooks() {
         List<Book> savedBooks = listPersistedBooks();
 
-        List<Book> books = bookRepository
-            .findByOptionalPublisherAndGenreAndYear("Walt Disney", "Adventure", null);
+        Page<Book> books = bookRepository
+            .findByOptionalPublisherAndGenreAndYear("Walt Disney", "Adventure", null, pageable);
 
-        assertEquals(3, books.size());
-        assertTrue(savedBooks.containsAll(books));
+        assertEquals(3, books.getContent().size());
+        assertTrue(savedBooks.containsAll(books.getContent()));
     }
 
     @Test
     void whenFindByNullPublisherANullGenreAndNullYear_ThenReturnListOfBooks() {
         List<Book> savedBooks = listPersistedBooks();
 
-        List<Book> books = bookRepository
-            .findByOptionalPublisherAndGenreAndYear("Walt Disney", null, null);
+        Page<Book> books = bookRepository
+            .findByOptionalPublisherAndGenreAndYear("Walt Disney", null, null, pageable);
 
-        assertEquals(3, books.size());
-        assertTrue(savedBooks.containsAll(books));
+        assertEquals(3, books.getContent().size());
+        assertTrue(savedBooks.containsAll(books.getContent()));
     }
 
     @Test
     void whenFindByOptionalPublisherAndNullGenreAndNullYear_ThenReturnListOfBooks() {
         List<Book> savedBooks = listPersistedBooks();
 
-        List<Book> books = bookRepository
-            .findByOptionalPublisherAndGenreAndYear("Walt Disney", null, null);
+        Page<Book> books = bookRepository
+            .findByOptionalPublisherAndGenreAndYear("Walt Disney", null, null, pageable);
 
-        assertEquals(3, books.size());
-        assertTrue(savedBooks.containsAll(books));
+        assertEquals(3, books.getContent().size());
+        assertTrue(savedBooks.containsAll(books.getContent()));
     }
 
     private List<Book> listPersistedBooks() {
@@ -171,18 +175,18 @@ class BookRepositoryIntegrationTest {
 
         return Stream.of(
             bookRepository.findByOptionalPublisherAndGenreAndYear(
-                "Walt Disney", null, null),
+                "Walt Disney", null, null, pageable),
             bookRepository.findByOptionalPublisherAndGenreAndYear(
-                null, "Adventure", null),
+                null, "Adventure", null, pageable),
             bookRepository.findByOptionalPublisherAndGenreAndYear(
-                null, null, "1988"),
+                null, null, "1988", pageable),
             bookRepository.findByOptionalPublisherAndGenreAndYear(
-                "Walt Disney", null, "1988"),
+                "Walt Disney", null, "1988", pageable),
             bookRepository.findByOptionalPublisherAndGenreAndYear(
-                "Walt Disney", "Adventure", "1988")
+                "Walt Disney", "Adventure", "1988", pageable)
         )
             .map(input -> DynamicTest.dynamicTest("Allowed: " + input,
-                () -> assertEquals(3, input.size()))
+                () -> assertEquals(3, input.getContent().size()))
             );
     }
 }
