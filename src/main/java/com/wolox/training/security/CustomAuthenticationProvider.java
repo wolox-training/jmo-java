@@ -16,14 +16,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
-    private final UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    public CustomAuthenticationProvider(@Lazy UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Override
     public Authentication authenticate(Authentication authentication) {

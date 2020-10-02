@@ -39,11 +39,8 @@ public class UserController {
     @Autowired
     private BookRepository bookRepository;
 
-    private final PasswordEncoder passwordEncoder;
-
-    public UserController(@Lazy PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping
     @ApiOperation(value = "Save a User", response = User.class)
