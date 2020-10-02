@@ -17,6 +17,5 @@ public class Message {
     public static final String USER_HAS_NOT_BOOK = "User has not the book";
     public static final String BOOK_CAN_NOT_NULL = "Book can not be null";
     public static final String BOOK_IS_ALREADY_ASSOCIATED = "Book is already associated";
-    public static final String BOOK_CAN_BE_NULL = "Book can not be null";
 
 }

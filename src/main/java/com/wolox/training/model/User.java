@@ -120,7 +120,7 @@ public final class User {
     }
 
     public void removeBook(Book book) {
-        Objects.requireNonNull(book, Message.BOOK_CAN_BE_NULL);
+        Objects.requireNonNull(book, Message.BOOK_CAN_NOT_NULL);
         books.removeIf(b -> b.equals(book));
     }
 }
