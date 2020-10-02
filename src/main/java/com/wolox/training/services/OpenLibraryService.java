@@ -11,6 +11,7 @@ import com.wolox.training.model.Book;
 import com.wolox.training.repositories.BookRepository;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,9 @@ public class OpenLibraryService {
     @Autowired
     private BookRepository bookRepository;
 
+    @Value("${open.library.url}")
+    private String openLibraryUrl;
+
     public ResponseEntity<BookDto> bookInfo(final String isbn) {
         final BookDto externalBook = externalBookByIsbn(isbn);
         final Book mappedBook = BookMapper.dtoToModel(externalBook);
@@ -36,7 +40,7 @@ public class OpenLibraryService {
         Map<String, String> urlParams =
             new ImmutableMap.Builder<String, String>().put("isbn", isbn).build();
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(Route.URL_EXTERNAL_API);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(openLibraryUrl+Route.URL_EXTERNAL_API);
         RestTemplate restTemplate = new RestTemplate();
 
         ResponseEntity<BookDto> response;
