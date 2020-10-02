@@ -495,7 +495,7 @@ class UserControllerTest {
                     + "    \"size\": 1,\n"
                     + "    \"number\": 0,\n"
                     + "    \"empty\": false\n"
-                    + "}"
+                    + "}    "
             ));
     }
 }

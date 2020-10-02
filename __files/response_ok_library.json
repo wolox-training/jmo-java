@@ -1,0 +1,74 @@
+{
+  "identifiers": {
+    "goodreads": [
+      "979250"
+    ],
+    "librarything": [
+      "192819"
+    ]
+  },
+  "subtitle": "Shouts of Nothingness",
+  "covers": [
+    240727,
+    3364000,
+    3363999,
+    3363998,
+    3364001,
+    3363976,
+    3363990
+  ],
+  "latest_revision": 7,
+  "contributions": [
+    "Brian Bruya (Translator)"
+  ],
+  "first_sentence": {
+    "type": "/type/text",
+    "value": "WHAT IS ZEN?"
+  },
+  "title": "Zen Speaks",
+  "languages": [
+    {
+      "key": "/languages/eng"
+    }
+  ],
+  "oclc_numbers": [
+    "28419896"
+  ],
+  "type": {
+    "key": "/type/edition"
+  },
+  "revision": 7,
+  "publishers": [
+    "Anchor"
+  ],
+  "last_modified": {
+    "type": "/type/datetime",
+    "value": "2010-08-05T23:45:12.750532"
+  },
+  "key": "/books/OL7440033M",
+  "authors": [
+    {
+      "key": "/authors/OL2677946A"
+    }
+  ],
+  "created": {
+    "type": "/type/datetime",
+    "value": "2008-04-29T13:35:46.876380"
+  },
+  "lccn": [
+    "93005405"
+  ],
+  "number_of_pages": 160,
+  "isbn_13": [
+    "9780385472579"
+  ],
+  "isbn_10": [
+    "0385472579"
+  ],
+  "publish_date": "April 15, 1994",
+  "works": [
+    {
+      "key": "/works/OL8052318W"
+    }
+  ]
+}
