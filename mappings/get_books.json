@@ -1,0 +1,14 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/isbn/([0-9]*).json",
+    "absoluteUrl" : "https://openlibrary.org/isbn/([0-9]*).json"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "response_ok_library.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

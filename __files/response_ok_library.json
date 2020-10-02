@@ -1,0 +1,18 @@
+{
+  "movies": [
+    {
+      "id": "1",
+      "title": "Inception",
+      "year": 2010,
+      "genre": "Action, Adventure, Sci-Fi, Thriller",
+      "director": "Christopher Nolan"
+    },
+    {
+      "id": "2",
+      "title": "Matrix",
+      "year": 1999,
+      "genre": "Action, Drama, Fantasy, Thriller",
+      "director": "Lana Wachowski, Lilly Wachowski"
+    }
+  ]
+}
