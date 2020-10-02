@@ -112,14 +112,14 @@ public final class User {
 
     public void addBook(Book book) {
         Objects.requireNonNull(book, Message.BOOK_CAN_NOT_NULL);
-        if(books.contains(book)) {
+        if (books.contains(book)) {
             throw new BookAlreadyOwnedException(Message.BOOK_IS_ALREADY_ASSOCIATED);
         }
         books.add(book);
     }
 
     public void removeBook(Book book) {
-        Objects.requireNonNull(book, Message.BOOK_CAN_BE_NULL);
+        Objects.requireNonNull(book, Message.BOOK_CAN_NOT_NULL);
         books.removeIf(b -> b.equals(book));
     }
 }
