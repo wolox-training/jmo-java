@@ -3,6 +3,7 @@ package com.wolox.training.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wolox.training.constants.Message;
 import com.wolox.training.exceptions.BookAlreadyOwnedException;
+import io.swagger.annotations.ApiModel;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -16,6 +17,7 @@ import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 
 @Entity(name = "Usser")
+@ApiModel(description = "user from training java")
 public final class User {
 
     @Id
