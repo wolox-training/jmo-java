@@ -38,23 +38,7 @@ public final class Book {
     @ManyToMany(mappedBy = "books")
     private List<User> users;
 
-    Book() {
-    }
-
-    public Book(Long idBook, String genre, String author, String image, String title,
-        String subtitle, String publisher, String year, Integer pages, String isbn,
-        List<User> users) {
-        this.idBook = idBook;
-        this.genre = genre;
-        this.author = author;
-        this.image = image;
-        this.title = title;
-        this.subtitle = subtitle;
-        this.publisher = publisher;
-        this.year = year;
-        this.pages = pages;
-        this.isbn = isbn;
-        this.users = users;
+    public Book() {
     }
 
     public void setGenre(String genre) {
@@ -177,7 +161,7 @@ public final class Book {
         }
         Book book = (Book) o;
         return Objects.equals(idBook, book.idBook) &&
-            genre.equals(book.genre) &&
+            Objects.equals(genre, book.genre) &&
             author.equals(book.author) &&
             image.equals(book.image) &&
             title.equals(book.title) &&

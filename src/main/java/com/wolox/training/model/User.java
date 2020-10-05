@@ -34,16 +34,7 @@ public final class User {
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Book> books;
 
-    User() {
-    }
-
-    public User(Long idUser, String username, String name, LocalDate birthdate,
-        List<Book> books) {
-        this.idUser = idUser;
-        this.username = username;
-        this.name = name;
-        this.birthdate = birthdate;
-        this.books = books;
+    public User() {
     }
 
     public void setUsername(String username) {
