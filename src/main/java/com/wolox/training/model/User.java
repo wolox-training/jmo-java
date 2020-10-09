@@ -1,5 +1,6 @@
 package com.wolox.training.model;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -31,6 +32,8 @@ public final class User {
     private String name;
     @NotNull
     private LocalDate birthdate;
+    @NotNull
+    private String password;
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Book> books;
 
@@ -38,23 +41,29 @@ public final class User {
     }
 
     public void setUsername(String username) {
-        checkNotNull(username , "Username is required");
+        checkNotNull(username, "Username is required");
         this.username = username;
     }
 
     public void setName(String name) {
-        checkNotNull(name , "Name is required");
+        checkNotNull(name, "Name is required");
         this.name = name;
     }
 
     public void setBirthdate(LocalDate birthdate) {
-        checkNotNull(birthdate , "Birthdate is required");
+        checkNotNull(birthdate, "Birthdate is required");
         this.birthdate = birthdate;
     }
 
     public void setBooks(List<Book> books) {
-        checkNotNull(books , "Books are not  should nulls");
+        checkNotNull(books, "Books are not should nulls");
         this.books = books;
+    }
+
+    public void setPassword(String password) {
+        checkNotNull(password, "Password is not should nulls");
+        checkArgument(password.equals(""), "Password is not should empty");
+        this.password = password;
     }
 
     public Long getIdUser() {
@@ -71,6 +80,10 @@ public final class User {
 
     public LocalDate getBirthdate() {
         return birthdate;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     @JsonIgnore

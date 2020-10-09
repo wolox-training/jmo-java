@@ -17,6 +17,7 @@ import javax.validation.Valid;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +38,9 @@ public class UserController {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @PostMapping
     @ApiOperation(value = "Save a User", response = User.class)
     @ApiResponses(value = {
@@ -45,7 +49,9 @@ public class UserController {
     })
     public User createUser(@Valid @RequestBody User user) {
         try {
-                return userRepository.save(user);
+            String encodePassword = passwordEncoder.encode(user.getPassword());
+            user.setPassword(encodePassword);
+            return userRepository.save(user);
         } catch (ConstraintViolationException dataIntegrityViolationException) {
             throw new DataIntegrityViolationException(Message.USER_ALREADY_EXIST);
         }

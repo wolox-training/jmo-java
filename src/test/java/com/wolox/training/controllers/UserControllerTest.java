@@ -11,6 +11,7 @@ import com.wolox.training.model.Book;
 import com.wolox.training.model.User;
 import com.wolox.training.repositories.BookRepository;
 import com.wolox.training.repositories.UserRepository;
+import com.wolox.training.security.CustomAuthenticationProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -41,11 +44,17 @@ class UserControllerTest {
     @MockBean
     private BookRepository mockBookRepository;
 
+    @MockBean
+    private CustomAuthenticationProvider customAuthenticationProvider;
+
+    @MockBean
+    private PasswordEncoder passwordEncoder;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private final User user = UserFactory.withDefaultData();
 
-    private final Book book = BookFactory.withDefaultData() ;
+    private final Book book = BookFactory.withDefaultData();
 
     @BeforeEach
     void before() {
@@ -54,6 +63,7 @@ class UserControllerTest {
     }
 
     @Test
+    @WithMockUser()
     void whenFindByIdWitchExists_thenUserIsReturned() throws Exception {
         Mockito.when(mockUserRepository.findById(1L)).thenReturn(Optional.of(user));
         String url = ("/api/users/1");
@@ -67,6 +77,7 @@ class UserControllerTest {
     }
 
     @Test
+    @WithMockUser()
     void whenListUsers_allUsersAreReturned() throws Exception {
         String url = ("/api/users");
         List<User> users = UserFactory.userList();
@@ -104,6 +115,7 @@ class UserControllerTest {
         String url = ("/api/users");
         User defaultUser = UserFactory.withDefaultData();
         Mockito.when(mockUserRepository.save(defaultUser)).thenReturn(user);
+        Mockito.when(passwordEncoder.encode("123456")).thenReturn(user.getPassword());
 
         mvc.perform(MockMvcRequestBuilders.post(url)
             .content(objectMapper.writeValueAsString(defaultUser))
@@ -126,6 +138,7 @@ class UserControllerTest {
     }
 
     @Test
+    @WithMockUser()
     void whenUpdateUser_ifExistsThenUserIsUpdated() throws Exception {
         String url = ("/api/users");
         Mockito.when(mockUserRepository.findById(user.getIdUser())).thenReturn(Optional.of(user));
@@ -141,6 +154,7 @@ class UserControllerTest {
     }
 
     @Test
+    @WithMockUser()
     void whenUpdateUser_ifNotExistsThenReturnError() throws Exception {
         String url = ("/api/users");
         Mockito.when(mockUserRepository.findById(user.getIdUser())).thenReturn(Optional.empty());
@@ -154,6 +168,7 @@ class UserControllerTest {
     }
 
     @Test
+    @WithMockUser()
     void whenDeleteUser_ifExistsThenUserIsRemoved() throws Exception {
         String url = ("/api/users/1");
         Mockito.when(mockUserRepository.findById(1L)).thenReturn(Optional.of(user));
@@ -167,6 +182,7 @@ class UserControllerTest {
     }
 
     @Test
+    @WithMockUser()
     void whenDeleteUser_ifNotExistsThenUserReturnError() throws Exception {
         String url = ("/api/users/1");
         Mockito.when(mockBookRepository.findById(1L)).thenReturn(Optional.empty());
@@ -180,6 +196,7 @@ class UserControllerTest {
     }
 
     @Test
+    @WithMockUser()
     void whenAddBookToUser_thenBookIsPersistedInUser() throws Exception {
         String url = ("/api/users/addBook/1/1");
         User defaultUser = UserFactory.withDefaultData();
@@ -201,6 +218,7 @@ class UserControllerTest {
     }
 
     @Test
+    @WithMockUser()
     void whenAddBookToUser_IfBookNotExistThenReturnedError() throws Exception {
         String url = ("/api/users/addBook/1/1");
         Mockito.when(mockBookRepository.findById(1L)).thenReturn(Optional.empty());
@@ -214,6 +232,7 @@ class UserControllerTest {
     }
 
     @Test
+    @WithMockUser()
     void whenAddBookToUser_IfUserNotExistThenReturnedError() throws Exception {
         String url = ("/api/users/addBook/1/1");
         Mockito.when(mockBookRepository.findById(1L)).thenReturn(Optional.of(book));
@@ -228,6 +247,7 @@ class UserControllerTest {
     }
 
     @Test
+    @WithMockUser()
     void whenRemoveBookToUser_thenBookIsPersistedInUser() throws Exception {
         String url = ("/api/users/removeBook/1/1");
         User defaultUser = UserFactory.withDefaultData();
@@ -252,6 +272,7 @@ class UserControllerTest {
     }
 
     @Test
+    @WithMockUser()
     void whenRemoveBookToUser_IfBookNotExistThenReturnedError() throws Exception {
         String url = ("/api/users/removeBook/1/1");
         Mockito.when(mockBookRepository.findById(1L)).thenReturn(Optional.empty());
@@ -265,6 +286,7 @@ class UserControllerTest {
     }
 
     @Test
+    @WithMockUser()
     void whenRemoveBookToUser_IfUserNotExistThenReturnedError() throws Exception {
         String url = ("/api/users/removeBook/1/1");
         Mockito.when(mockBookRepository.findById(1L)).thenReturn(Optional.of(book));
