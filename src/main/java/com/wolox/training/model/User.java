@@ -62,7 +62,7 @@ public final class User {
 
     public void setPassword(String password) {
         checkNotNull(password, "Password is not should nulls");
-        checkArgument(password.equals(""), "Password is not should empty");
+        checkArgument(!password.equals(""), "Password is not should empty");
         this.password = password;
     }
 

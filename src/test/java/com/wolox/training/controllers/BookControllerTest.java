@@ -7,14 +7,17 @@ import com.wolox.training.factory.BookFactory;
 import com.wolox.training.model.Book;
 import com.wolox.training.repositories.BookRepository;
 import com.wolox.training.security.CustomAuthenticationProvider;
+import com.wolox.training.services.OpenLibraryService;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -36,6 +39,9 @@ class BookControllerTest {
     @MockBean
     private CustomAuthenticationProvider customAuthenticationProvider;
 
+    @SpyBean
+    private OpenLibraryService openLibraryService;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private final Book book = BookFactory.withDefaultData();
@@ -49,9 +55,9 @@ class BookControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .characterEncoding(UTF_8))
             .andExpect(MockMvcResultMatchers.status().isOk())
-            .andExpect(MockMvcResultMatchers.content().json(
-                jsonBookWithDefaultData()
-            ));
+            .andExpect(MockMvcResultMatchers.content()
+                .json(jsonBookWithDefaultData())
+            );
     }
 
     @Test
@@ -188,6 +194,62 @@ class BookControllerTest {
             .characterEncoding(UTF_8))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+
+    @Test
+    @WithMockUser
+    void whenFindByIsbnWitchExists_thenBookIsReturned() throws Exception {
+        Mockito.when(mockBookRepository.findByIsbn("0385472579")).thenReturn(Optional.of(book));
+        String url = ("/api/books/findIsbn/0385472579");
+        mvc.perform(MockMvcRequestBuilders.get(url)
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding(UTF_8))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.content().json(
+                jsonBookExternalApi()
+            ));
+    }
+
+    private String jsonBookExternalApi() {
+        return "{\n"
+            + "    \"title\": \"Harry Potter\","
+            + "    \"subtitle\" : \"-\","
+            + "    \"publishers\" :  \"Bloomsbury\","
+            + "    \"authors\": \"J. K. Rowlingn\","
+            + "    \"publish_date\" : \"1997\","
+            + "    \"number_of_pages\" : 223,"
+            + "    \"isbn_10\" : \"6453723453\""
+            + "}";
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("When the book not exist in my data base, then consult book in external api, if exist it persists")
+    void whenFindByIsbnWitchNotExists_thenPersistedBookAndItIsReturned() throws Exception {
+        Mockito.when(mockBookRepository.findByIsbn("0385472579")).thenReturn(Optional.empty());
+        Mockito.when(mockBookRepository.save(Mockito.any())).thenReturn(book);
+        String url = ("/api/books/findIsbn/0385472579");
+        mvc.perform(MockMvcRequestBuilders.get(url)
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding(UTF_8))
+            .andExpect(MockMvcResultMatchers.status().isCreated())
+            .andExpect(MockMvcResultMatchers.content().json(
+                jsonBookExternalApi()
+            ));
+    }
+
+    @Test
+    @WithMockUser
+    void whenFindByIsbnWitchNotExists_thenReturnError() throws Exception {
+        Mockito.when(mockBookRepository.findByIsbn("1")).thenReturn(Optional.empty());
+        String url = ("/api/books/findIsbn/1");
+        mvc.perform(MockMvcRequestBuilders.get(url)
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding(UTF_8))
+            .andExpect(MockMvcResultMatchers.status()
+                .isNotFound()
+            );
     }
 
 }

@@ -79,6 +79,16 @@ class BookRepositoryIntegrationTest {
         assertNull(persistedBook);
     }
 
+    @Test
+    void whenFindByIsbnWitchExists_thenBookIsReturned() {
+        Book savedBook = bookRepository.save(book);
+
+        Book persistedBook = bookRepository.findByIsbn(savedBook.getIsbn()).orElse(null);
+
+        assert persistedBook != null;
+        validateBookAtributtes(persistedBook);
+    }
+
     private void validateBookAtributtes(Book persistedBook) {
         assertNotNull(persistedBook.getIdBook());
         assertEquals("Fantasy", persistedBook.getGenre());

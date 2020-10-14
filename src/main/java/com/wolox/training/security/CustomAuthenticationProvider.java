@@ -5,6 +5,7 @@ import com.wolox.training.model.User;
 import com.wolox.training.repositories.UserRepository;
 import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -36,7 +37,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         } else {
             return null;
         }
-
 
     }
 
