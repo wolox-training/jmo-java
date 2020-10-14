@@ -122,7 +122,7 @@ public class UserController {
             .orElseThrow(() -> new BookNotFoundException(Message.USER_NOT_FOUND));
     }
 
-    @GetMapping(path = "/username")
+    @GetMapping(path = Route.USERNAME)
     public String currentUserName(Authentication authentication) {
         return authentication.getName();
     }

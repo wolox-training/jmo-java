@@ -20,5 +20,6 @@ public final class Route {
     public static final String USER_PARAMS = "/{name}/{startDate}/{endDate}";
     public static final String OPTIONAL_PARAMS = "/optional";
     public static final String ALL_OPTIONAL_PARAMS = "/all";
+    public static final String USERNAME = "/username";
 
 }
