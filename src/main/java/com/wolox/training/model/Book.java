@@ -4,15 +4,22 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
-import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
+@Getter
+@NoArgsConstructor
+@ToString
+@EqualsAndHashCode
 public final class Book {
 
     @Id
@@ -35,11 +42,9 @@ public final class Book {
     private Integer pages;
     @NotNull
     private String isbn;
+    @JsonIgnore
     @ManyToMany(mappedBy = "books")
     private List<User> users;
-
-    public Book() {
-    }
 
     public void setGenre(String genre) {
         this.genre = genre;
@@ -88,95 +93,5 @@ public final class Book {
     public void setUsers(List<User> users) {
         checkNotNull(users, "User is required");
         this.users = users;
-    }
-
-    public Long getIdBook() {
-        return idBook;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getSubtitle() {
-        return subtitle;
-    }
-
-    public String getPublisher() {
-        return publisher;
-    }
-
-    public String getYear() {
-        return year;
-    }
-
-    public Integer getPages() {
-        return pages;
-    }
-
-    public String getIsbn() {
-        return isbn;
-    }
-
-    @JsonIgnore
-    public List<User> getUsers() {
-        return users;
-    }
-
-    @Override
-    public String toString() {
-        return "Book{" +
-            "idBook=" + idBook +
-            ", genre='" + genre + '\'' +
-            ", author='" + author + '\'' +
-            ", image='" + image + '\'' +
-            ", title='" + title + '\'' +
-            ", subtitle='" + subtitle + '\'' +
-            ", publisher='" + publisher + '\'' +
-            ", year='" + year + '\'' +
-            ", pages=" + pages +
-            ", isbn='" + isbn + '\'' +
-            '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Book book = (Book) o;
-        return Objects.equals(idBook, book.idBook) &&
-            Objects.equals(genre, book.genre) &&
-            author.equals(book.author) &&
-            image.equals(book.image) &&
-            title.equals(book.title) &&
-            subtitle.equals(book.subtitle) &&
-            publisher.equals(book.publisher) &&
-            year.equals(book.year) &&
-            pages.equals(book.pages) &&
-            isbn.equals(book.isbn) &&
-            Objects.equals(users, book.users);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects
-            .hash(idBook, genre, author, image, title, subtitle, publisher, year, pages, isbn,
-                users);
     }
 }

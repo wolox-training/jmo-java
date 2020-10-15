@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/isbn/0385472579.json"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "response_ok_library.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

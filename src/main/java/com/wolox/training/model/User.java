@@ -18,27 +18,35 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity(name = "Usser")
 @ApiModel(description = "user from training java")
+@NoArgsConstructor
+@ToString
 public final class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Getter
     private Long idUser;
+    @Getter
     @NotNull
     private String username;
+    @Getter
     @NotNull
     private String name;
+    @Getter
     @NotNull
     private LocalDate birthdate;
+    @Getter
     @NotNull
     private String password;
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Book> books;
-
-    public User() {
-    }
 
     public void setUsername(String username) {
         checkNotNull(username, "Username is required");
@@ -66,40 +74,9 @@ public final class User {
         this.password = password;
     }
 
-    public Long getIdUser() {
-        return idUser;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public LocalDate getBirthdate() {
-        return birthdate;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
     @JsonIgnore
     public List<Book> getBooks() {
         return Collections.unmodifiableList(books);
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-            "idUser=" + idUser +
-            ", username='" + username + '\'' +
-            ", name='" + name + '\'' +
-            ", birthdate=" + birthdate +
-            ", books=" + books +
-            '}';
     }
 
     @Override

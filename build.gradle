@@ -31,6 +31,12 @@ dependencies {
     testCompile group: 'com.h2database', name: 'h2', version: '1.3.148'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.security:spring-security-test'
+    testCompile "com.github.tomakehurst:wiremock-jre8:2.27.2"
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.12'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
 }
 
 test {

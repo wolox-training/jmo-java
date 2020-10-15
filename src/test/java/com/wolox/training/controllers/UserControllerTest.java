@@ -1,6 +1,7 @@
 package com.wolox.training.controllers;
 
 import static com.wolox.training.constants.Constants.UTF_8;
+import static org.mockito.ArgumentMatchers.eq;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -24,6 +25,8 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -39,6 +42,9 @@ class UserControllerTest {
 
     @Autowired
     private MockMvc mvc;
+
+    @MockBean
+    private Pageable pageable;
 
     @MockBean
     private UserRepository mockUserRepository;
@@ -83,32 +89,52 @@ class UserControllerTest {
     void whenListUsers_allUsersAreReturned() throws Exception {
         String url = ("/api/users");
         List<User> users = UserFactory.userList();
-        Mockito.when(mockUserRepository.findAll()).thenReturn(users);
+        Mockito.when(mockUserRepository.findAll(Mockito.any(Pageable.class)))
+            .thenReturn(new PageImpl<>(users));
         mvc.perform(MockMvcRequestBuilders.get(url)
             .contentType(MediaType.APPLICATION_JSON)
             .characterEncoding(UTF_8))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.content().json(
-                "[\n"
-                    + "    {\n"
-                    + "        \"idUser\": null,\n"
-                    + "        \"username\": \"Kevv\",\n"
-                    + "        \"name\": \"Kevin\",\n"
-                    + "        \"birthdate\": \"1994-05-02\"\n"
+                "{\n"
+                    + "    \"content\": [\n"
+                    + "        {\n"
+                    + "            \"idUser\": null,\n"
+                    + "            \"username\": \"Kevv\",\n"
+                    + "            \"name\": \"Kevin\",\n"
+                    + "            \"birthdate\": \"1994-05-02\",\n"
+                    + "            \"password\": \"123456\"\n"
+                    + "        },\n"
+                    + "        {\n"
+                    + "            \"idUser\": null,\n"
+                    + "            \"username\": \"CamuXee\",\n"
+                    + "            \"name\": \"Jhoan\",\n"
+                    + "            \"birthdate\": \"1994-07-22\",\n"
+                    + "            \"password\": \"2846sbd\"\n"
+                    + "        },\n"
+                    + "        {\n"
+                    + "            \"idUser\": null,\n"
+                    + "            \"username\": \"Darvand\",\n"
+                    + "            \"name\": \"David\",\n"
+                    + "            \"birthdate\": \"1995-06-28\",\n"
+                    + "            \"password\": \"hsgaaa$12\"\n"
+                    + "        }\n"
+                    + "    ],\n"
+                    + "    \"pageable\": \"INSTANCE\",\n"
+                    + "    \"last\": true,\n"
+                    + "    \"totalPages\": 1,\n"
+                    + "    \"totalElements\": 3,\n"
+                    + "    \"sort\": {\n"
+                    + "        \"sorted\": false,\n"
+                    + "        \"unsorted\": true,\n"
+                    + "        \"empty\": true\n"
                     + "    },\n"
-                    + "    {\n"
-                    + "        \"idUser\": null,\n"
-                    + "        \"username\": \"CamuXee\",\n"
-                    + "        \"name\": \"Jhoan\",\n"
-                    + "        \"birthdate\": \"1994-07-22\"\n"
-                    + "    },\n"
-                    + "    {\n"
-                    + "        \"idUser\": null,\n"
-                    + "        \"username\": \"Darvand\",\n"
-                    + "        \"name\": \"David\",\n"
-                    + "        \"birthdate\": \"1995-06-28\"\n"
-                    + "    }\n"
-                    + "]"
+                    + "    \"first\": true,\n"
+                    + "    \"size\": 3,\n"
+                    + "    \"number\": 0,\n"
+                    + "    \"numberOfElements\": 3,\n"
+                    + "    \"empty\": false\n"
+                    + "}"
             ));
     }
 
@@ -323,8 +349,9 @@ class UserControllerTest {
         LocalDate start = LocalDate.of(1915, 2, 21);
         LocalDate end = LocalDate.of(1926, 7, 10);
 
-        Mockito.when(mockUserRepository.findByNameContainingIgnoreCaseAndBirthdateBetween("nando",
-            start, end)).thenReturn(users);
+        Mockito
+            .when(mockUserRepository.findByNameContainingIgnoreCaseAndBirthdateBetween(eq("nando"),
+                eq(start), eq(end), Mockito.any(Pageable.class))).thenReturn(new PageImpl<>(users));
 
         String url = ("/api/users/nando/1915-02-21/1926-07-10");
 
@@ -343,8 +370,8 @@ class UserControllerTest {
     void whenFindByNameWithNullStarDateAndNullEndDate_ThenReturnListOfUsers() throws Exception {
         List<User> users = UserFactory.userlistWithSameParameters();
 
-        Mockito.when(mockUserRepository.findByOptinalNameAndBirthdate("nando",
-            null, null)).thenReturn(users);
+        Mockito.when(mockUserRepository.findByOptinalNameAndBirthdate(eq("nando"),
+            eq(null), eq(null), Mockito.any(Pageable.class))).thenReturn(new PageImpl<>(users));
 
         String url = ("/api/users/optional");
 
@@ -367,8 +394,8 @@ class UserControllerTest {
         LocalDate start = LocalDate.of(1915, 2, 21);
         LocalDate end = LocalDate.of(1926, 7, 10);
 
-        Mockito.when(mockUserRepository.findByOptinalNameAndBirthdate(null,
-            start, end)).thenReturn(users);
+        Mockito.when(mockUserRepository.findByOptinalNameAndBirthdate(eq(null),
+            eq(start), eq(end), Mockito.any(Pageable.class))).thenReturn(new PageImpl<>(users));
 
         String url = ("/api/users/optional");
 
@@ -385,26 +412,45 @@ class UserControllerTest {
     }
 
     private static String JsonListUserWithSameParameters() {
-        return "[\n"
-            + "    {\n"
-            + "        \"idUser\": null,\n"
-            + "        \"username\": \"Xand\",\n"
-            + "        \"name\": \"Fernando Andres\",\n"
-            + "        \"birthdate\": \"1921-07-22\"\n"
+        return "{\n"
+            + "    \"content\": [\n"
+            + "        {\n"
+            + "            \"idUser\": null,\n"
+            + "            \"username\": \"Xand\",\n"
+            + "            \"name\": \"Fernando Andres\",\n"
+            + "            \"birthdate\": \"1921-07-22\",\n"
+            + "            \"password\": \"euabdm\"\n"
+            + "        },\n"
+            + "        {\n"
+            + "            \"idUser\": null,\n"
+            + "            \"username\": \"Clow\",\n"
+            + "            \"name\": \"Fernando Emilio\",\n"
+            + "            \"birthdate\": \"1916-09-16\",\n"
+            + "            \"password\": \"anit\"\n"
+            + "        },\n"
+            + "        {\n"
+            + "            \"idUser\": null,\n"
+            + "            \"username\": \"Batist\",\n"
+            + "            \"name\": \"Fabio Fernando\",\n"
+            + "            \"birthdate\": \"1923-06-28\",\n"
+            + "            \"password\": \"2cfeadf\"\n"
+            + "        }\n"
+            + "    ],\n"
+            + "    \"pageable\": \"INSTANCE\",\n"
+            + "    \"last\": true,\n"
+            + "    \"totalPages\": 1,\n"
+            + "    \"totalElements\": 3,\n"
+            + "    \"sort\": {\n"
+            + "        \"sorted\": false,\n"
+            + "        \"unsorted\": true,\n"
+            + "        \"empty\": true\n"
             + "    },\n"
-            + "    {\n"
-            + "        \"idUser\": null,\n"
-            + "        \"username\": \"Clow\",\n"
-            + "        \"name\": \"Fernando Emilio\",\n"
-            + "        \"birthdate\": \"1916-09-16\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "        \"idUser\": null,\n"
-            + "        \"username\": \"Batist\",\n"
-            + "        \"name\": \"Fabio Fernando\",\n"
-            + "        \"birthdate\": \"1923-06-28\"\n"
-            + "    }\n"
-            + "]";
+            + "    \"first\": true,\n"
+            + "    \"size\": 3,\n"
+            + "    \"number\": 0,\n"
+            + "    \"numberOfElements\": 3,\n"
+            + "    \"empty\": false\n"
+            + "}";
     }
 
     @Test
@@ -412,8 +458,9 @@ class UserControllerTest {
     void whenFindUsersByUsername_ThenReturnListOfUsers() throws Exception {
         List<User> users = UserFactory.userlistWithSameParameters();
 
-        Mockito.when(mockUserRepository.getAll("Clow",
-            null, null)).thenReturn(Arrays.asList(users.get(1)));
+        Mockito.when(mockUserRepository.getAll(eq("Clow"),
+            eq(null), eq(null), Mockito.any(Pageable.class)))
+            .thenReturn(new PageImpl<>(Arrays.asList(users.get(1))));
 
         String url = ("/api/users/all");
 
@@ -424,12 +471,31 @@ class UserControllerTest {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.content().json(
-                "[{\n"
-                    + "        \"idUser\": null,\n"
-                    + "        \"username\": \"Clow\",\n"
-                    + "        \"name\": \"Fernando Emilio\",\n"
-                    + "        \"birthdate\": \"1916-09-16\"\n"
-                    + "    }]\n"
+                "{\n"
+                    + "    \"content\": [\n"
+                    + "        {\n"
+                    + "            \"idUser\": null,\n"
+                    + "            \"username\": \"Clow\",\n"
+                    + "            \"name\": \"Fernando Emilio\",\n"
+                    + "            \"birthdate\": \"1916-09-16\",\n"
+                    + "            \"password\": \"anit\"\n"
+                    + "        }\n"
+                    + "    ],\n"
+                    + "    \"pageable\": \"INSTANCE\",\n"
+                    + "    \"last\": true,\n"
+                    + "    \"totalElements\": 1,\n"
+                    + "    \"totalPages\": 1,\n"
+                    + "    \"sort\": {\n"
+                    + "        \"sorted\": false,\n"
+                    + "        \"unsorted\": true,\n"
+                    + "        \"empty\": true\n"
+                    + "    },\n"
+                    + "    \"numberOfElements\": 1,\n"
+                    + "    \"first\": true,\n"
+                    + "    \"size\": 1,\n"
+                    + "    \"number\": 0,\n"
+                    + "    \"empty\": false\n"
+                    + "}    "
             ));
     }
 }

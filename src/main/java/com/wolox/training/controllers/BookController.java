@@ -8,12 +8,13 @@ import com.wolox.training.mapper.BookMapper;
 import com.wolox.training.model.Book;
 import com.wolox.training.repositories.BookRepository;
 import com.wolox.training.services.OpenLibraryService;
-import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,8 +46,8 @@ public class BookController {
     }
 
     @GetMapping
-    public Iterable<Book> listBooks() {
-        return bookRepository.findAll();
+    public Page<Book> listBooks(Pageable pageable) {
+        return bookRepository.findAll(pageable);
     }
 
     @PutMapping
@@ -79,20 +80,22 @@ public class BookController {
     }
 
     @GetMapping(path = Route.BOOK_PARAMS)
-    public ResponseEntity<List<Book>> findByParameters(@PathVariable String publisher,
-        @PathVariable String genre, @PathVariable String year) {
-        List<Book> books = bookRepository.findByPublisherAndGenreAndYear(publisher, genre, year);
+    public ResponseEntity<Page<Book>> findByParameters(@PathVariable String publisher,
+        @PathVariable String genre, @PathVariable String year, Pageable pageable) {
+        Page<Book> books = bookRepository
+            .findByPublisherAndGenreAndYear(publisher, genre, year, pageable);
         return ResponseEntity.ok(books);
     }
 
     @GetMapping(path = Route.OPTIONAL_PARAMS)
-    public ResponseEntity<List<Book>> findByOptionalParameters(
+    public ResponseEntity<Page<Book>> findByOptionalParameters(
         @RequestParam(name = "publisher", required = false) String publisher,
         @RequestParam(name = "genre", required = false) String genre,
-        @RequestParam(name = "year", required = false) String year) {
+        @RequestParam(name = "year", required = false) String year,
+        Pageable pageable) {
 
-        List<Book> books = bookRepository
-            .findByOptionalPublisherAndGenreAndYear(publisher, genre, year);
+        Page<Book> books = bookRepository
+            .findByOptionalPublisherAndGenreAndYear(publisher, genre, year, pageable);
 
         return ResponseEntity.ok(books);
     }
