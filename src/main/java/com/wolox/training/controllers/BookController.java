@@ -8,6 +8,7 @@ import com.wolox.training.mapper.BookMapper;
 import com.wolox.training.model.Book;
 import com.wolox.training.repositories.BookRepository;
 import com.wolox.training.services.OpenLibraryService;
+import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
 import org.hibernate.exception.ConstraintViolationException;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -74,6 +76,25 @@ public class BookController {
         Optional<Book> book = bookRepository.findByIsbn(isbn);
         return book.map(value -> ResponseEntity.ok(BookMapper.modelToDto(value)))
             .orElseGet(() -> openLibraryService.bookInfo(isbn));
+    }
+
+    @GetMapping(path = Route.BOOK_PARAMS)
+    public ResponseEntity<List<Book>> findByParameters(@PathVariable String publisher,
+        @PathVariable String genre, @PathVariable String year) {
+        List<Book> books = bookRepository.findByPublisherAndGenreAndYear(publisher, genre, year);
+        return ResponseEntity.ok(books);
+    }
+
+    @GetMapping(path = Route.OPTIONAL_PARAMS)
+    public ResponseEntity<List<Book>> findByOptionalParameters(
+        @RequestParam(name = "publisher", required = false) String publisher,
+        @RequestParam(name = "genre", required = false) String genre,
+        @RequestParam(name = "year", required = false) String year) {
+
+        List<Book> books = bookRepository
+            .findByOptionalPublisherAndGenreAndYear(publisher, genre, year);
+
+        return ResponseEntity.ok(books);
     }
 
 }

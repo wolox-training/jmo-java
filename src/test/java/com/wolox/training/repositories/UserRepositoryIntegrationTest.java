@@ -8,15 +8,21 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.wolox.training.factory.UserFactory;
 import com.wolox.training.model.User;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @DataJpaTest
 class UserRepositoryIntegrationTest {
 
@@ -80,7 +86,6 @@ class UserRepositoryIntegrationTest {
         assertNull(persistedUser);
     }
 
-
     private void validateUserAttributes(User persistedUser) {
         assertNotNull(persistedUser.getIdUser());
         assertEquals("Kevv", persistedUser.getUsername());
@@ -88,4 +93,91 @@ class UserRepositoryIntegrationTest {
         assertEquals(LocalDate.of(1994, 5, 2), persistedUser.getBirthdate());
     }
 
+    @Test
+    void whenFindByNameAndBirthdate_ThenReturnListOfUsers() {
+        List<User> savedUsers = listPersistedUsers();
+
+        LocalDate startDate = LocalDate.of(1915, 2, 21);
+        LocalDate endDate = LocalDate.of(1925, 7, 10);
+
+        List<User> users = userRepository.findByNameContainingIgnoreCaseAndBirthdateBetween("nando",
+            startDate, endDate);
+
+        assertEquals(3, users.size());
+        assertTrue(savedUsers.containsAll(users));
+    }
+
+    @Test
+    void whenFindByNameAndBirthdate_ThenShouldIgnoreCaseAndReturnListOfUsers() {
+        List<User> savedUsers = listPersistedUsers();
+
+        LocalDate startDate = LocalDate.of(1915, 2, 21);
+        LocalDate endDate = LocalDate.of(1925, 7, 10);
+
+        List<User> users = userRepository.findByNameContainingIgnoreCaseAndBirthdateBetween("NaNDo",
+            startDate, endDate);
+
+        assertEquals(3, users.size());
+        assertTrue(savedUsers.containsAll(users));
+    }
+
+    private List<User> listPersistedUsers() {
+        List<User> userListWithParams = UserFactory.userlistWithSameParameters();
+        List<User> userList = UserFactory.userList();
+
+        List<User> list = Stream.of(userListWithParams, userList)
+            .flatMap(Collection::stream)
+            .collect(Collectors.toList());
+
+        return userRepository.saveAll(list);
+    }
+
+    @TestFactory
+    @DisplayName("Should allow querying with different null parameters")
+    Stream<DynamicTest> should_be_allowed() {
+        List<User> userListWithParams = UserFactory.userlistWithSameParameters();
+        userRepository.saveAll(userListWithParams);
+
+        LocalDate startDate = LocalDate.of(1915, 2, 21);
+        LocalDate endDate = LocalDate.of(1925, 7, 10);
+
+        return Stream.of(
+            userRepository.findByOptinalNameAndBirthdate(
+                "%nando%", null, null),
+            userRepository.findByOptinalNameAndBirthdate(
+                null, startDate, endDate),
+            userRepository.findByOptinalNameAndBirthdate(
+                "%nando%", startDate, endDate),
+            userRepository.findByOptinalNameAndBirthdate(
+                "%nando%", startDate, null)
+        )
+            .map(input -> DynamicTest.dynamicTest("Allowed: " + input,
+                () -> assertEquals(3, input.size()))
+            );
+    }
+
+    @TestFactory
+    @DisplayName("Should allow querying with different null parameters")
+    Stream<DynamicTest> should_be_allowed_with_optional_parameters() {
+        List<User> userListWithParams = UserFactory.userlistWithSameParameters();
+        userRepository.saveAll(userListWithParams);
+
+        LocalDate birthdate = LocalDate.of(1915, 2, 21);
+
+        return Stream.of(
+            userRepository.getAll(null, "Fernando Emilio",
+                birthdate),
+            userRepository.getAll("Clow", null,
+                birthdate),
+            userRepository.getAll("Clow", "Fernando Emilio",
+                null),
+            userRepository.getAll(null, "Fernando Emilio",
+                null),
+            userRepository.getAll("Clow", null,
+                null)
+        )
+            .map(input -> DynamicTest.dynamicTest("Allowed: " + input,
+                () -> assertEquals(1, input.size()))
+            );
+    }
 }

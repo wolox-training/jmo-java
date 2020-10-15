@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -20,13 +20,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(BookController.class)
 class BookControllerTest {
 
@@ -250,6 +250,130 @@ class BookControllerTest {
             .andExpect(MockMvcResultMatchers.status()
                 .isNotFound()
             );
+    }
+
+    @Test
+    @WithMockUser()
+    void whenFindByParameters_ThenReturnListOfBooks() throws Exception {
+        List<Book> books = BookFactory.bookListWithSameParameters();
+
+        Mockito.when(mockBookRepository.findByPublisherAndGenreAndYear("Walt Disney",
+            "Adventure", "1988")).thenReturn(books);
+
+        String url = ("/api/books/Walt Disney/Adventure/1988");
+
+        mvc.perform(MockMvcRequestBuilders.get(url)
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding(UTF_8))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.content().json(
+                JsonBookListWithSameParameters()
+            ));
+    }
+
+    @Test
+    @WithMockUser()
+    void whenFindByPublisherWithNullGenreAndNullYear_ThenReturnListOfBooks() throws Exception {
+        List<Book> books = BookFactory.bookListWithSameParameters();
+
+        Mockito.when(mockBookRepository.findByOptionalPublisherAndGenreAndYear("Walt Disney",
+            null, null)).thenReturn(books);
+
+        String url = ("/api/books/optional");
+
+        mvc.perform(MockMvcRequestBuilders.get(url)
+            .contentType(MediaType.APPLICATION_JSON)
+            .queryParam("publisher", "Walt Disney")
+            .characterEncoding("utf-8"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.content().json(
+                JsonBookListWithSameParameters()
+            ));
+    }
+
+    @Test
+    @WithMockUser()
+    void whenFindByGenreAndNullPublisherAndNullYear_ThenReturnListOfBooks() throws Exception {
+        List<Book> books = BookFactory.bookListWithSameParameters();
+
+        Mockito.when(mockBookRepository.findByOptionalPublisherAndGenreAndYear(null,
+            "Adventure", null)).thenReturn(books);
+
+        String url = ("/api/books/optional");
+
+        mvc.perform(MockMvcRequestBuilders.get(url)
+            .contentType(MediaType.APPLICATION_JSON)
+            .queryParam("genre", "Adventure")
+            .characterEncoding("utf-8"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.content().json(
+                JsonBookListWithSameParameters()
+            ));
+    }
+
+    @Test
+    @WithMockUser()
+    void whenFindByYearWithNullPublisherAndNullGenre_ThenReturnListOfBooks() throws Exception {
+        List<Book> books = BookFactory.bookListWithSameParameters();
+
+        Mockito.when(mockBookRepository.findByOptionalPublisherAndGenreAndYear(null,
+            null, "1988")).thenReturn(books);
+
+        String url = ("/api/books/optional");
+
+        mvc.perform(MockMvcRequestBuilders.get(url)
+            .contentType(MediaType.APPLICATION_JSON)
+            .queryParam("year", "1988")
+            .characterEncoding("utf-8"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.content().json(
+                JsonBookListWithSameParameters()
+            ));
+    }
+
+    private static String JsonBookListWithSameParameters() {
+        return "[\n"
+            + "    {\n"
+            + "        \"idBook\": null,\n"
+            + "        \"genre\": \"Adventure\",\n"
+            + "        \"author\": \"John Lasseter\",\n"
+            + "        \"image\": \"Buddy.png\",\n"
+            + "        \"title\": \"Toy Story\",\n"
+            + "        \"subtitle\": \"-\",\n"
+            + "        \"publisher\": \"Walt Disney\",\n"
+            + "        \"year\": \"1988\",\n"
+            + "        \"pages\": 392,\n"
+            + "        \"isbn\": \"8472821\"\n"
+            + "    },\n"
+            + "    {\n"
+            + "        \"idBook\": null,\n"
+            + "        \"genre\": \"Adventure\",\n"
+            + "        \"author\": \"Don Hahn\",\n"
+            + "        \"image\": \"Lion-King.png\",\n"
+            + "        \"title\": \"The Lion King\",\n"
+            + "        \"subtitle\": \"-\",\n"
+            + "        \"publisher\": \"Walt Disney\",\n"
+            + "        \"year\": \"1988\",\n"
+            + "        \"pages\": 98,\n"
+            + "        \"isbn\": \"1234701\"\n"
+            + "    },\n"
+            + "    {\n"
+            + "        \"idBook\": null,\n"
+            + "        \"genre\": \"Adventure\",\n"
+            + "        \"author\": \"John Musker\",\n"
+            + "        \"image\": \"SadMoana.png\",\n"
+            + "        \"title\": \"Moana\",\n"
+            + "        \"subtitle\": \"-\",\n"
+            + "        \"publisher\": \"Walt Disney\",\n"
+            + "        \"year\": \"1988\",\n"
+            + "        \"pages\": 142,\n"
+            + "        \"isbn\": \"986273645\"\n"
+            + "    }\n"
+            + "]";
     }
 
 }

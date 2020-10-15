@@ -13,11 +13,16 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import java.time.LocalDate;
+import java.util.List;
 import javax.validation.Valid;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +31,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -111,5 +117,42 @@ public class UserController {
     public User findUser(@PathVariable Long idUser) {
         return userRepository.findById(idUser)
             .orElseThrow(() -> new BookNotFoundException(Message.USER_NOT_FOUND));
+    }
+
+    @GetMapping(path = Route.USERNAME)
+    public String currentUserName(Authentication authentication) {
+        return authentication.getName();
+    }
+
+    @GetMapping(path = Route.USER_PARAMS)
+    public ResponseEntity<List<User>> findByParameters(@PathVariable String name,
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @PathVariable LocalDate startDate,
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @PathVariable LocalDate endDate) {
+
+        List<User> users = userRepository
+            .findByNameContainingIgnoreCaseAndBirthdateBetween(name, startDate, endDate);
+        return ResponseEntity.ok(users);
+    }
+
+    @GetMapping(path = Route.OPTIONAL_PARAMS)
+    public ResponseEntity<List<User>> findByOptionalParameters(
+        @RequestParam(name = "name", required = false) String name,
+        @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+        @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+
+        List<User> users = userRepository
+            .findByOptinalNameAndBirthdate(name, startDate, endDate);
+        return ResponseEntity.ok(users);
+    }
+
+    @GetMapping(path = Route.ALL_OPTIONAL_PARAMS)
+    public ResponseEntity<List<User>> getAll(
+        @RequestParam(name = "username", required = false) String username,
+        @RequestParam(name = "name", required = false) String name,
+        @RequestParam(name = "birthdate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate birthdate) {
+
+        List<User> users = userRepository
+            .getAll(username, name, birthdate);
+        return ResponseEntity.ok(users);
     }
 }
