@@ -1,6 +1,7 @@
 package com.wolox.training.controllers;
 
 import static com.wolox.training.constants.Constants.UTF_8;
+import static org.mockito.ArgumentMatchers.eq;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wolox.training.factory.BookFactory;
@@ -13,11 +14,14 @@ import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -32,6 +36,9 @@ class BookControllerTest {
 
     @Autowired
     private MockMvc mvc;
+
+    @Mock
+    private Pageable pageable;
 
     @MockBean
     private BookRepository mockBookRepository;
@@ -65,49 +72,66 @@ class BookControllerTest {
     void whenListBook_thenAllBooksAreReturned() throws Exception {
         String url = ("/api/books");
         List<Book> books = BookFactory.bookList();
-        Mockito.when(mockBookRepository.findAll()).thenReturn(books);
+        Mockito.when(mockBookRepository.findAll(Mockito.any(Pageable.class)))
+            .thenReturn(new PageImpl<>(books));
         mvc.perform(MockMvcRequestBuilders.get(url)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.content().json(
-                "[\n"
-                    + "    {\n"
-                    + "        \"idBook\": null,\n"
-                    + "        \"genre\": \"Fantasy\",\n"
-                    + "        \"author\": \"J. K. Rowlingn\",\n"
-                    + "        \"image\": \"image.png\",\n"
-                    + "        \"title\": \"Harry Potter\",\n"
-                    + "        \"subtitle\": \"-\",\n"
-                    + "        \"publisher\": \"Bloomsbury\",\n"
-                    + "        \"year\": \"1997\",\n"
-                    + "        \"pages\": 223,\n"
-                    + "        \"isbn\": \"6453723453\"\n"
+                "{\n"
+                    + "    \"content\": [\n"
+                    + "        {\n"
+                    + "            \"idBook\": null,\n"
+                    + "            \"genre\": \"Fantasy\",\n"
+                    + "            \"author\": \"J. K. Rowlingn\",\n"
+                    + "            \"image\": \"image.png\",\n"
+                    + "            \"title\": \"Harry Potter\",\n"
+                    + "            \"subtitle\": \"-\",\n"
+                    + "            \"publisher\": \"Bloomsbury\",\n"
+                    + "            \"year\": \"1997\",\n"
+                    + "            \"pages\": 223,\n"
+                    + "            \"isbn\": \"6453723453\"\n"
+                    + "        },\n"
+                    + "        {\n"
+                    + "            \"idBook\": null,\n"
+                    + "            \"genre\": \"Adventure\",\n"
+                    + "            \"author\": \"J. R. R. Tolkien\",\n"
+                    + "            \"image\": \"image2.png\",\n"
+                    + "            \"title\": \"The Lord of the rings\",\n"
+                    + "            \"subtitle\": \"-\",\n"
+                    + "            \"publisher\": \"Allen & Unwin\",\n"
+                    + "            \"year\": \"1954\",\n"
+                    + "            \"pages\": 152,\n"
+                    + "            \"isbn\": \"148758\"\n"
+                    + "        },\n"
+                    + "        {\n"
+                    + "            \"idBook\": null,\n"
+                    + "            \"genre\": \"Children's novel\",\n"
+                    + "            \"author\": \"Rob Kidd\",\n"
+                    + "            \"image\": \"image3.png\",\n"
+                    + "            \"title\": \"Pirates of the Caribbean: Jack Sparrow\",\n"
+                    + "            \"subtitle\": \"-\",\n"
+                    + "            \"publisher\": \"Disney Press\",\n"
+                    + "            \"year\": \"2006\",\n"
+                    + "            \"pages\": 236,\n"
+                    + "            \"isbn\": \"7346345\"\n"
+                    + "        }\n"
+                    + "    ],\n"
+                    + "    \"pageable\": \"INSTANCE\",\n"
+                    + "    \"totalPages\": 1,\n"
+                    + "    \"totalElements\": 3,\n"
+                    + "    \"last\": true,\n"
+                    + "    \"size\": 3,\n"
+                    + "    \"number\": 0,\n"
+                    + "    \"sort\": {\n"
+                    + "        \"sorted\": false,\n"
+                    + "        \"unsorted\": true,\n"
+                    + "        \"empty\": true\n"
                     + "    },\n"
-                    + "    {\n"
-                    + "        \"idBook\": null,\n"
-                    + "        \"genre\": \"Adventure\",\n"
-                    + "        \"author\": \"J. R. R. Tolkien\",\n"
-                    + "        \"image\": \"image2.png\",\n"
-                    + "        \"title\": \"The Lord of the rings\",\n"
-                    + "        \"subtitle\": \"-\",\n"
-                    + "        \"publisher\": \"Allen & Unwin\",\n"
-                    + "        \"year\": \"1954\",\n"
-                    + "        \"pages\": 152,\n"
-                    + "        \"isbn\": \"148758\"\n"
-                    + "    },\n"
-                    + "    {\n"
-                    + "        \"idBook\": null,\n"
-                    + "        \"genre\": \"Children's novel\",\n"
-                    + "        \"author\": \"Rob Kidd\",\n"
-                    + "        \"image\": \"image3.png\",\n"
-                    + "        \"title\": \"Pirates of the Caribbean: Jack Sparrow\",\n"
-                    + "        \"subtitle\": \"-\",\n"
-                    + "        \"publisher\": \"Disney Press\",\n"
-                    + "        \"year\": \"2006\",\n"
-                    + "        \"pages\": 236,\n"
-                    + "        \"isbn\": \"7346345\"\n"
-                    + "    }\n"
-                    + "]"
+                    + "    \"numberOfElements\": 3,\n"
+                    + "    \"first\": true,\n"
+                    + "    \"empty\": false\n"
+                    + "}x`"
             ));
     }
 
@@ -257,8 +281,8 @@ class BookControllerTest {
     void whenFindByParameters_ThenReturnListOfBooks() throws Exception {
         List<Book> books = BookFactory.bookListWithSameParameters();
 
-        Mockito.when(mockBookRepository.findByPublisherAndGenreAndYear("Walt Disney",
-            "Adventure", "1988")).thenReturn(books);
+        Mockito.when(mockBookRepository.findByPublisherAndGenreAndYear(eq("Walt Disney"),
+            eq("Adventure"), eq("1988"), Mockito.any())).thenReturn(new PageImpl<>(books));
 
         String url = ("/api/books/Walt Disney/Adventure/1988");
 
@@ -267,9 +291,9 @@ class BookControllerTest {
             .characterEncoding(UTF_8))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk())
-            .andExpect(MockMvcResultMatchers.content().json(
-                JsonBookListWithSameParameters()
-            ));
+            .andExpect(MockMvcResultMatchers.content()
+                .json(JsonBookListWithSameParameters())
+            );
     }
 
     @Test
@@ -277,8 +301,8 @@ class BookControllerTest {
     void whenFindByPublisherWithNullGenreAndNullYear_ThenReturnListOfBooks() throws Exception {
         List<Book> books = BookFactory.bookListWithSameParameters();
 
-        Mockito.when(mockBookRepository.findByOptionalPublisherAndGenreAndYear("Walt Disney",
-            null, null)).thenReturn(books);
+        Mockito.when(mockBookRepository.findByOptionalPublisherAndGenreAndYear(eq("Walt Disney"),
+            eq(null), eq(null), Mockito.any())).thenReturn(new PageImpl<>(books));
 
         String url = ("/api/books/optional");
 
@@ -298,8 +322,8 @@ class BookControllerTest {
     void whenFindByGenreAndNullPublisherAndNullYear_ThenReturnListOfBooks() throws Exception {
         List<Book> books = BookFactory.bookListWithSameParameters();
 
-        Mockito.when(mockBookRepository.findByOptionalPublisherAndGenreAndYear(null,
-            "Adventure", null)).thenReturn(books);
+        Mockito.when(mockBookRepository.findByOptionalPublisherAndGenreAndYear(eq(null),
+            eq("Adventure"), eq(null), Mockito.any())).thenReturn(new PageImpl<>(books));
 
         String url = ("/api/books/optional");
 
@@ -319,8 +343,8 @@ class BookControllerTest {
     void whenFindByYearWithNullPublisherAndNullGenre_ThenReturnListOfBooks() throws Exception {
         List<Book> books = BookFactory.bookListWithSameParameters();
 
-        Mockito.when(mockBookRepository.findByOptionalPublisherAndGenreAndYear(null,
-            null, "1988")).thenReturn(books);
+        Mockito.when(mockBookRepository.findByOptionalPublisherAndGenreAndYear(eq(null),
+            eq(null), eq("1988"), Mockito.any())).thenReturn(new PageImpl<>(books));
 
         String url = ("/api/books/optional");
 
@@ -336,44 +360,60 @@ class BookControllerTest {
     }
 
     private static String JsonBookListWithSameParameters() {
-        return "[\n"
-            + "    {\n"
-            + "        \"idBook\": null,\n"
-            + "        \"genre\": \"Adventure\",\n"
-            + "        \"author\": \"John Lasseter\",\n"
-            + "        \"image\": \"Buddy.png\",\n"
-            + "        \"title\": \"Toy Story\",\n"
-            + "        \"subtitle\": \"-\",\n"
-            + "        \"publisher\": \"Walt Disney\",\n"
-            + "        \"year\": \"1988\",\n"
-            + "        \"pages\": 392,\n"
-            + "        \"isbn\": \"8472821\"\n"
+        return "{\n"
+            + "    \"content\": [\n"
+            + "        {\n"
+            + "            \"idBook\": null,\n"
+            + "            \"genre\": \"Adventure\",\n"
+            + "            \"author\": \"John Lasseter\",\n"
+            + "            \"image\": \"Buddy.png\",\n"
+            + "            \"title\": \"Toy Story\",\n"
+            + "            \"subtitle\": \"-\",\n"
+            + "            \"publisher\": \"Walt Disney\",\n"
+            + "            \"year\": \"1988\",\n"
+            + "            \"pages\": 392,\n"
+            + "            \"isbn\": \"8472821\"\n"
+            + "        },\n"
+            + "        {\n"
+            + "            \"idBook\": null,\n"
+            + "            \"genre\": \"Adventure\",\n"
+            + "            \"author\": \"Don Hahn\",\n"
+            + "            \"image\": \"Lion-King.png\",\n"
+            + "            \"title\": \"The Lion King\",\n"
+            + "            \"subtitle\": \"-\",\n"
+            + "            \"publisher\": \"Walt Disney\",\n"
+            + "            \"year\": \"1988\",\n"
+            + "            \"pages\": 98,\n"
+            + "            \"isbn\": \"1234701\"\n"
+            + "        },\n"
+            + "        {\n"
+            + "            \"idBook\": null,\n"
+            + "            \"genre\": \"Adventure\",\n"
+            + "            \"author\": \"John Musker\",\n"
+            + "            \"image\": \"SadMoana.png\",\n"
+            + "            \"title\": \"Moana\",\n"
+            + "            \"subtitle\": \"-\",\n"
+            + "            \"publisher\": \"Walt Disney\",\n"
+            + "            \"year\": \"1988\",\n"
+            + "            \"pages\": 142,\n"
+            + "            \"isbn\": \"986273645\"\n"
+            + "        }\n"
+            + "    ],\n"
+            + "    \"pageable\": \"INSTANCE\",\n"
+            + "    \"last\": true,\n"
+            + "    \"totalPages\": 1,\n"
+            + "    \"totalElements\": 3,\n"
+            + "    \"size\": 3,\n"
+            + "    \"number\": 0,\n"
+            + "    \"sort\": {\n"
+            + "        \"sorted\": false,\n"
+            + "        \"unsorted\": true,\n"
+            + "        \"empty\": true\n"
             + "    },\n"
-            + "    {\n"
-            + "        \"idBook\": null,\n"
-            + "        \"genre\": \"Adventure\",\n"
-            + "        \"author\": \"Don Hahn\",\n"
-            + "        \"image\": \"Lion-King.png\",\n"
-            + "        \"title\": \"The Lion King\",\n"
-            + "        \"subtitle\": \"-\",\n"
-            + "        \"publisher\": \"Walt Disney\",\n"
-            + "        \"year\": \"1988\",\n"
-            + "        \"pages\": 98,\n"
-            + "        \"isbn\": \"1234701\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "        \"idBook\": null,\n"
-            + "        \"genre\": \"Adventure\",\n"
-            + "        \"author\": \"John Musker\",\n"
-            + "        \"image\": \"SadMoana.png\",\n"
-            + "        \"title\": \"Moana\",\n"
-            + "        \"subtitle\": \"-\",\n"
-            + "        \"publisher\": \"Walt Disney\",\n"
-            + "        \"year\": \"1988\",\n"
-            + "        \"pages\": 142,\n"
-            + "        \"isbn\": \"986273645\"\n"
-            + "    }\n"
-            + "]";
+            + "    \"numberOfElements\": 3,\n"
+            + "    \"first\": true,\n"
+            + "    \"empty\": false\n"
+            + "}";
     }
 
 }

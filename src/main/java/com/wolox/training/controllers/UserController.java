@@ -14,12 +14,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.time.LocalDate;
-import java.util.List;
 import javax.validation.Valid;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -65,8 +66,8 @@ public class UserController {
     }
 
     @GetMapping
-    public Iterable<User> listUsers() {
-        return userRepository.findAll();
+    public Page<User> listUsers(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 
     @PutMapping
@@ -125,34 +126,37 @@ public class UserController {
     }
 
     @GetMapping(path = Route.USER_PARAMS)
-    public ResponseEntity<List<User>> findByParameters(@PathVariable String name,
+    public ResponseEntity<Page<User>> findByParameters(@PathVariable String name,
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @PathVariable LocalDate startDate,
-        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @PathVariable LocalDate endDate) {
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @PathVariable LocalDate endDate,
+        Pageable pageable) {
 
-        List<User> users = userRepository
-            .findByNameContainingIgnoreCaseAndBirthdateBetween(name, startDate, endDate);
+        Page<User> users = userRepository
+            .findByNameContainingIgnoreCaseAndBirthdateBetween(name, startDate, endDate, pageable);
         return ResponseEntity.ok(users);
     }
 
     @GetMapping(path = Route.OPTIONAL_PARAMS)
-    public ResponseEntity<List<User>> findByOptionalParameters(
+    public ResponseEntity<Page<User>> findByOptionalParameters(
         @RequestParam(name = "name", required = false) String name,
         @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-        @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+        Pageable pageable) {
 
-        List<User> users = userRepository
-            .findByOptinalNameAndBirthdate(name, startDate, endDate);
+        Page<User> users = userRepository
+            .findByOptinalNameAndBirthdate(name, startDate, endDate, pageable);
         return ResponseEntity.ok(users);
     }
 
     @GetMapping(path = Route.ALL_OPTIONAL_PARAMS)
-    public ResponseEntity<List<User>> getAll(
+    public ResponseEntity<Page<User>> getAll(
         @RequestParam(name = "username", required = false) String username,
         @RequestParam(name = "name", required = false) String name,
-        @RequestParam(name = "birthdate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate birthdate) {
+        @RequestParam(name = "birthdate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate birthdate,
+        Pageable pageable) {
 
-        List<User> users = userRepository
-            .getAll(username, name, birthdate);
+        Page<User> users = userRepository
+            .getAll(username, name, birthdate, pageable);
         return ResponseEntity.ok(users);
     }
 }
